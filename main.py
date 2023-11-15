@@ -6,7 +6,7 @@ from extract import extract
 
 def main():
     # Change following constants if needed
-    RECIPE_NAME_QUERY = ''
+    RECIPE_NAME_QUERY = 'meatloaf'
     MOCK_RECIPE_FILE_NAME = 'mock-recipe-1.json'
 
     # recipe = download_recipe_by_name(RECIPE_NAME_QUERY)
