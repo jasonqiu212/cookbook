@@ -1,6 +1,7 @@
 """This file provides operations to download and load recipes."""
 
 import json
+import requests
 
 
 def download_recipe_by_name(query):
@@ -13,9 +14,11 @@ def download_recipe_by_name(query):
     Returns:
         Dictionary containing recipe name, instructions, and ingredients of searched recipe
     """
-    # TODO: Change as per required for chosen API
-    data = {}
-    return load_recipe(data)
+    url = 'https://www.themealdb.com/api/json/v1/1/search.php?s={}'.format(
+        query)
+    response = requests.get(url)
+    response_json = response.json()
+    return load_recipe(response_json)
 
 
 def load_mock_recipe(file_name):
