@@ -13,7 +13,7 @@ def extract(recipe):
     Extracts steps with annotations from recipe.
 
     Args:
-        recipe: Recipe to extract from
+        recipe: Dictionary representing recipe to extract from
 
     Returns:
         List of steps containing annotations.
