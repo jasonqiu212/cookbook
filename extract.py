@@ -2,10 +2,16 @@
 
 import step
 
-# TODO: Method for identifying imperative sentences
 # TODO: Method for extracting cooking actions
 # TODO: Method for extracting ingredients
 # TODO: Method for extracting tools, utensils, and parameters
+
+
+def is_imperative(sentence):
+    """
+    Checks if sentence is imperative.
+    """
+    # TODO
 
 
 def extract(recipe):
