@@ -33,7 +33,7 @@ class Bot:
         Args:
             url: Weblink to load recipe from
         """
-        # call extraction methods
+        # TODO: Call extraction methods
         name = ''
         steps = []
         ingredients = []
@@ -51,7 +51,7 @@ class Bot:
                 break
             elif question == 'help':
                 self.show_help()
-            # TODO: Add other cases
+            # TODO: Add other cases using regular expression?
             # elif question == ...
 
     def show_help(self):
@@ -59,11 +59,51 @@ class Bot:
         Displays valid queries that the bot can understand.
         """
         print('Here are the queries and questions I can answer:')
-        print('1. help: Display the supported queries and questions')
-        print('2. quit: Exit the chatbot')
+        print('help: Display the supported queries and questions')
+        print('quit: Exit the chatbot')
         # TODO: Add more possible commands
+
+    def show_steps(self):
+        """
+        Displays all steps for this recipe.
+        """
+        # TODO
+
+    def show_current_step(self):
+        """
+        Displays all steps for this recipe.
+        """
+        # TODO
+
+    def show_next_step(self):
+        """
+        Displays the next step.
+        """
+        # TODO
+
+    def show_previous_step(self):
+        """
+        Displays the previous step.
+        """
+        # TODO
+
+    def show_step_i(self, i):
+        """
+        Displays the i-th step for this recipe.
+
+        Args:
+            i: Index of step to show
+        """
+        # TODO
 
     def show_ingredients(self):
         """
         Displays all ingredients needed for this recipe.
         """
+        # TODO
+
+    def show_google_search(self, query):
+        """
+        Displays a link to a Google search 
+        """
+        # TODO
