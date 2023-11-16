@@ -54,7 +54,7 @@ class Bot:
             # TODO: Add other cases
             # elif question == ...
 
-    def show_help():
+    def show_help(self):
         """
         Displays valid queries that the bot can understand.
         """
@@ -63,7 +63,7 @@ class Bot:
         print('2. quit: Exit the chatbot')
         # TODO: Add more possible commands
 
-    def show_ingredients():
+    def show_ingredients(self):
         """
         Displays all ingredients needed for this recipe.
         """
