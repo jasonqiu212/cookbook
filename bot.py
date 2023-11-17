@@ -16,6 +16,13 @@ class Bot:
         """
         Starts interactions with user.
         """
+        self.get_recipe_source()
+        self.answer_queries()
+
+    def get_recipe_source(self):
+        """
+        Gets recipe source from user.
+        """
         print(
             'Welcome to your interactive cookbook! How would you like to fetch your recipe from TheMealDB?')
         print('[1] URL to a specific recipe.')
@@ -41,8 +48,6 @@ class Bot:
         print('Thanks! Let\'s start working with \"{}\". What do you want to do?'.format(
             self.recipe.name))
         print('Hint: Not sure what to ask? Enter \"help\" to show the supported queries and questions.')
-
-        self.answer_queries()
 
     def load_recipe(self, raw_recipe):
         """
