@@ -13,8 +13,8 @@ Team members:
 1. Clone this repository.
 
 ```
-$ git clone git@github.com:jasonqiu212/golden-globes-tweet-mining.git
-$ cd golden-globes-tweet-mining
+$ git clone git@github.com:jasonqiu212/cookbook.git
+$ cd cookbook
 ```
 
 2. Install the required Python packages from `requirements.txt`.
@@ -28,3 +28,7 @@ $ python3 -m pip install -r requirements.txt
 ```
 $ python3 -m spacy download en_core_web_sm
 ```
+
+## Acknowledgements
+
+- [TheMealDB](https://www.themealdb.com/)
