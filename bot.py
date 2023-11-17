@@ -128,3 +128,48 @@ class Bot:
         Displays a link to a Google search 
         """
         # TODO
+
+
+    def answer_what_is(question, recipe_json):
+        # 解析问题中的关键词
+        key_word = question.lower().split("what is ")[1].replace("?", "").strip()
+
+        # 搜索成分
+        for ingredient in recipe_json["ingredients"]:
+            if key_word in ingredient["name"].lower():
+                return f"{ingredient['name']} is an ingredient used in the recipe, with a quantity of {ingredient['quantity']}."
+
+        # 搜索工具
+        for tool in recipe_json["tools"]:
+            if key_word in tool.lower():
+                return f"{tool} is a tool used in the recipe."
+
+        # 如果没有找到
+        return "I'm sorry, I couldn't find information about that in the recipe."
+
+
+#what is示例使用
+#recipe_json = json.loads(your_recipe_json_string)  # 假设 your_recipe_json_string 是你从API获取的JSON字符串
+#question = "What is pancetta?"
+#answer = answer_what_is(question, recipe_json)
+#print(answer)
+
+
+    def answer_how_to(question, recipe_json):
+        # 解析问题中的关键动作
+        action = question.lower().split("how do i ")[1].replace("?", "").strip()
+
+        # 搜索步骤
+        for step in recipe_json["steps"]:
+            if action in step.lower():
+                return step
+
+        # 如果没有找到
+        return "I'm sorry, I couldn't find specific instructions on that in the recipe."
+
+# how to 示例使用
+#recipe_json = json.loads(your_recipe_json_string)  # 假设 your_recipe_json_string 是你从API获取的JSON字符串
+#question = "How do I whisk the eggs?"
+#answer = answer_how_to(question, recipe_json)
+#print(answer)
+    
