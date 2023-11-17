@@ -1,4 +1,4 @@
-"""This file provides operations to download and load recipes."""
+"""This file provides operations to download recipes."""
 
 import json
 import requests
@@ -18,27 +18,42 @@ def download_recipe_by_name(query):
         query)
     response = requests.get(url)
     response_json = response.json()
-    return load_recipe(response_json)
+    return process_recipe_from_api(response_json)
 
 
-def load_mock_recipe(file_name):
+def download_recipe_by_url(url):
     """
-    Loads test recipe JSON file.
+    Downloads recipe from API through URL.
 
     Args:
-        file_name: File name containing mock recipe
+        url: URL of recipe to download
 
     Returns:
-        Dictionary containing recipe name, instructions, and ingredients of mock recipe
+        Dictionary containing recipe name, instructions, and ingredients of searched recipe
     """
-    with open(file_name) as json_file:
-        data = json.load(json_file)
-        return load_recipe(data)
+    response = requests.get(url)
+    response_json = response.json()
+    return process_recipe_from_api(response_json)
 
 
-def load_recipe(data):
+# def load_mock_recipe(file_name):
+#     """
+#     Loads test recipe JSON file.
+
+#     Args:
+#         file_name: File name containing mock recipe
+
+#     Returns:
+#         Dictionary containing recipe name, instructions, and ingredients of mock recipe
+#     """
+#     with open(file_name) as json_file:
+#         data = json.load(json_file)
+#         return load_recipe(data)
+
+
+def process_recipe_from_api(data):
     """
-    Loads recipe returned by API into relevant data.
+    Transforms recipe returned by API into relevant data.
 
     Args:
         data: Recipe returned by API

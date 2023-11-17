@@ -1,3 +1,4 @@
+from download import download_recipe_by_name, download_recipe_by_url
 from parsed_recipe import ParsedRecipe
 
 
@@ -16,9 +17,26 @@ class Bot:
         Starts interactions with user.
         """
         print(
-            'Welcome to your interactive cookbook! Please input a URL to a recipe from XXX.')
-        url = input('> ')
-        self.load_recipe(url)
+            'Welcome to your interactive cookbook! How would you like to fetch your recipe from TheMealDB?')
+        print('[1] URL to a specific recipe.')
+        print('[2] Search recipe by name.')
+        while True:
+            query_choice = input('> ')
+            if query_choice == '1':
+                print('Got it! Please input the URL to a recipe on TheMealDB.')
+                url = input('> ')
+                raw_recipe = download_recipe_by_url(url)
+                self.load_recipe(raw_recipe)
+                break
+            if query_choice == '2':
+                print('Got it! Please input the name to a recipe you wish to cook.')
+                name = input('> ')
+                raw_recipe = download_recipe_by_name(name)
+                self.load_recipe(raw_recipe)
+                break
+            else:
+                print(
+                    'Sorry, I did not understand that. Please enter either 1 or 2 to indicate your choice.')
 
         print('Thanks! Let\'s start working with \"{}\". What do you want to do?'.format(
             self.recipe.name))
@@ -26,12 +44,12 @@ class Bot:
 
         self.answer_queries()
 
-    def load_recipe(self, url):
+    def load_recipe(self, raw_recipe):
         """
-        Loads and extracts recipe from link into bot.
+        Extracts and loads recipe into bot.
 
         Args:
-            url: Weblink to load recipe from
+            raw_recipe: Raw recipe fetched from API
         """
         # TODO: Call extraction methods
         name = ''
