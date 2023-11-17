@@ -1,4 +1,5 @@
 from download import download_recipe_by_name, download_recipe_by_url
+from extract import extract
 from parsed_recipe import ParsedRecipe
 
 
@@ -56,10 +57,7 @@ class Bot:
         Args:
             raw_recipe: Raw recipe fetched from API
         """
-        # TODO: Call extraction methods
-        name = ''
-        steps = []
-        ingredients = []
+        name, steps, ingredients = extract(raw_recipe)
         self.recipe = ParsedRecipe(name, steps, ingredients)
         self.step_pointer = 0
 

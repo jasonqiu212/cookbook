@@ -14,14 +14,20 @@ def is_imperative(sentence):
     # TODO
 
 
-def extract(recipe):
+def extract(raw_recipe):
     """
-    Extracts steps with annotations from recipe.
+    Extracts name, ingredients, and steps with annotations from recipe.
 
     Args:
-        recipe: Dictionary representing recipe to extract from
+        raw_recipe: Dictionary representing recipe to extract from
 
     Returns:
-        List of steps containing annotations.
+        Tuple of recipe name, ingredients and steps with annotations
     """
-    return []
+    name = raw_recipe['name']
+    steps = []
+    ingredients = []
+
+    # TODO: Include extraction methods here
+
+    return name, steps, ingredients
