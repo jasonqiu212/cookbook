@@ -1,28 +1,26 @@
 """This file provides operations to extract information."""
 
 import step
+import spacy
 
 # TODO: Method for extracting cooking actions
 # TODO: Method for extracting ingredients
 # TODO: Method for extracting tools, utensils, and parameters
-
+nlp = spacy.load("en_core_web_sm")
 
 def is_imperative(sentence):
     """
     Checks if sentence is imperative.
     """
     # TODO
-    common_verbs = {'close', 'sit', 'stand', 'go', 'come', 'turn', 'bring', 'take', 'give', 'move', 'stop', 'start',
-                    'leave', 'write', 'read', 'speak', 'listen', 'buy', 'pay', 'watch', 'play', 'run', 'walk', 'eat',
-                    'drink', 'sleep'}
-    pronouns = {'I', 'you', 'he', 'she', 'it', 'we', 'they'}
-    interrogatives = {'what', 'who', 'how', 'where', 'when', 'why'}
+    # Parse the sentence using the spaCy model
+    doc = nlp(sentence)
 
-    words = sentence.lower().split()
-
-    if words:
-        first_word = words[0]
-        return first_word in common_verbs and first_word not in pronouns and first_word not in interrogatives
+    for token in doc:
+        if token.dep_ == "ROOT" and token.pos_ == "VERB":
+            # Check if there's no subject
+            if not any(child.dep_ in ["nsubj", "nsubjpass"] for child in token.children):
+                return True
 
     return False
 
@@ -44,3 +42,6 @@ def extract(raw_recipe):
     # TODO: Include extraction methods here
 
     return name, steps, ingredients
+
+
+print(is_imperative('here is an apple'))
