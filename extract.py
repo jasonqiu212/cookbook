@@ -12,6 +12,19 @@ def is_imperative(sentence):
     Checks if sentence is imperative.
     """
     # TODO
+    common_verbs = {'close', 'sit', 'stand', 'go', 'come', 'turn', 'bring', 'take', 'give', 'move', 'stop', 'start',
+                    'leave', 'write', 'read', 'speak', 'listen', 'buy', 'pay', 'watch', 'play', 'run', 'walk', 'eat',
+                    'drink', 'sleep'}
+    pronouns = {'I', 'you', 'he', 'she', 'it', 'we', 'they'}
+    interrogatives = {'what', 'who', 'how', 'where', 'when', 'why'}
+
+    words = sentence.lower().split()
+
+    if words:
+        first_word = words[0]
+        return first_word in common_verbs and first_word not in pronouns and first_word not in interrogatives
+
+    return False
 
 
 def extract(raw_recipe):
