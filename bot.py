@@ -1,7 +1,7 @@
 from download import download_recipe_by_name, download_recipe_by_url
 from extract import extract
 from parsed_recipe import ParsedRecipe
-
+import urllib.parse
 
 class Bot:
     """
@@ -82,31 +82,43 @@ class Bot:
         print('Here are the queries and questions I can answer:')
         print('help: Display the supported queries and questions')
         print('quit: Exit the chatbot')
-        # TODO: Add more possible commands
+        print('steps: Show all steps of the recipe')
+        print('current step: Show the current step')
+        print('next step: Show the next step')
+        print('previous step: Show the previous step')
+        print('step <number>: Show a specific step')
+        print('ingredients: Show the ingredients of the recipe')
 
     def show_steps(self):
         """
         Displays all steps for this recipe.
         """
-        # TODO
+        for i, step in enumerate(self.recipe["steps"], start=1):
+            print(f"Step {i}: {step}")
 
     def show_current_step(self):
         """
-        Displays all steps for this recipe.
+        Displays the current step for this recipe.
         """
-        # TODO
+        if self.current_step < len(self.recipe["steps"]):
+            print(f"Current Step {self.current_step + 1}: {self.recipe['steps'][self.current_step]}")
+        else:
+            print("No more steps in the recipe.")
 
     def show_next_step(self):
         """
         Displays the next step.
         """
-        # TODO
+        self.current_step += 1
+        self.show_current_step()
 
     def show_previous_step(self):
         """
         Displays the previous step.
         """
-        # TODO
+        if self.current_step > 0:
+            self.current_step -= 1
+        self.show_current_step()
 
     def show_step_i(self, i):
         """
@@ -115,61 +127,32 @@ class Bot:
         Args:
             i: Index of step to show
         """
-        # TODO
+        if 0 <= i-1 < len(self.recipe["steps"]):
+            print(f"Step {i}: {self.recipe['steps'][i-1]}")
+        else:
+            print("Invalid step number.")
 
     def show_ingredients(self):
         """
         Displays all ingredients needed for this recipe.
         """
-        # TODO
+        print("Ingredients:")
+        for ingredient in self.recipe["ingredients"]:
+            print(f"{ingredient['name']}: {ingredient['quantity']}")
+
 
     def show_google_search(self, query):
         """
-        Displays a link to a Google search 
+        Generates a Google search URL for the given query.
+
+        Args:
+            query: The user's query or question.
         """
+        base_url = "https://www.google.com/search?q="
+        query_encoded = urllib.parse.quote(query)
+        search_url = base_url + query_encoded
+        return search_url
         # TODO
 
 
-    def answer_what_is(question, recipe_json):
-        # 解析问题中的关键词
-        key_word = question.lower().split("what is ")[1].replace("?", "").strip()
-
-        # 搜索成分
-        for ingredient in recipe_json["ingredients"]:
-            if key_word in ingredient["name"].lower():
-                return f"{ingredient['name']} is an ingredient used in the recipe, with a quantity of {ingredient['quantity']}."
-
-        # 搜索工具
-        for tool in recipe_json["tools"]:
-            if key_word in tool.lower():
-                return f"{tool} is a tool used in the recipe."
-
-        # 如果没有找到
-        return "I'm sorry, I couldn't find information about that in the recipe."
-
-
-#what is示例使用
-#recipe_json = json.loads(your_recipe_json_string)  # 假设 your_recipe_json_string 是你从API获取的JSON字符串
-#question = "What is pancetta?"
-#answer = answer_what_is(question, recipe_json)
-#print(answer)
-
-
-    def answer_how_to(question, recipe_json):
-        # 解析问题中的关键动作
-        action = question.lower().split("how do i ")[1].replace("?", "").strip()
-
-        # 搜索步骤
-        for step in recipe_json["steps"]:
-            if action in step.lower():
-                return step
-
-        # 如果没有找到
-        return "I'm sorry, I couldn't find specific instructions on that in the recipe."
-
-# how to 示例使用
-#recipe_json = json.loads(your_recipe_json_string)  # 假设 your_recipe_json_string 是你从API获取的JSON字符串
-#question = "How do I whisk the eggs?"
-#answer = answer_how_to(question, recipe_json)
-#print(answer)
     
