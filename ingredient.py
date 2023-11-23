@@ -7,3 +7,8 @@ class Ingredient:
         self.name = name
         self.quantity = quantity
         self.measurement = measurement
+
+    def __repr__(self):
+        if self.measurement == Ingredient.COUNTABLE_MEASUREMENT:
+            return f'{self.quantity} {self.name}'
+        return f'{self.quantity} {self.measurement} of {self.name}'
