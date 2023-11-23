@@ -1,7 +1,9 @@
 """This file provides operations to extract information."""
 
-import step
 import spacy
+
+from ingredient import Ingredient
+from step import Step
 
 # TODO: Method for extracting cooking actions
 # TODO: Method for extracting ingredients
@@ -30,6 +32,30 @@ def is_imperative(sentence):
     return False
 
 
+def extract_ingredients(raw_ingredients):
+    """
+    Extracts ingredients from recipe.
+
+    Args:
+        raw_ingredients: Dictionary with ingredient name mapped to quantity
+
+    Returns:
+        List of ingredients.
+    """
+    ingredients = []
+    for name, quantity in raw_ingredients.items():
+        quantity_word_list = quantity.split()
+        if len(quantity_word_list) == 0:
+            ingredients.append(Ingredient(name, '', ''))
+        elif len(quantity_word_list) == 1:
+            ingredients.append(Ingredient(
+                name, quantity_word_list[0], Ingredient.COUNTABLE_MEASUREMENT))
+        else:
+            ingredients.append(Ingredient(
+                name, quantity_word_list[0], ' '.join(quantity_word_list[1:])))
+    return ingredients
+
+
 def extract(raw_recipe):
     """
     Extracts name, ingredients, and steps with annotations from recipe.
@@ -42,7 +68,7 @@ def extract(raw_recipe):
     """
     name = raw_recipe['name']
     steps = []
-    ingredients = []
+    ingredients = extract_ingredients(raw_recipe['ingredients'])
 
     # TODO: Include extraction methods here
 
