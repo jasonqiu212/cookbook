@@ -5,5 +5,5 @@ class Ingredient:
 
     def __init__(self, name, quantity, measurement):
         self.name = name
-        self.steps = quantity
-        self.ingredients = measurement
+        self.quantity = quantity
+        self.measurement = measurement
