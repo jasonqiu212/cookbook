@@ -70,13 +70,26 @@ class Bot:
         """
         while True:
             question = input('> ').lower()
-            if question == 'quit':
+            if question == 'help':
+                self.show_help()
+            elif question == 'quit':
                 print('Hope your food tastes great! Goodbye.')
                 break
-            elif question == 'help':
-                self.show_help()
-            # TODO: Add other cases using regular expression?
-            # elif question == ...
+            elif question == 'show all steps':
+                self.show_steps()
+            elif question == 'show all ingredients':
+                self.show_ingredients()
+            elif question == 'repeat':
+                self.show_current_step()
+            elif question == 'go to the next step':
+                self.show_next_step()
+            elif question == 'go back one step':
+                self.show_previous_step()
+            elif re.search('take me to step [\d]+', question):
+                i = re.search(
+                    'take me to step [\d]+', question).group().split()[-1]
+                self.show_step_i(i)
+            # TODO: Add other cases using regular expression
 
     def show_help(self):
         """
