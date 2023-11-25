@@ -8,6 +8,12 @@ class ParsedRecipe:
         self.steps = steps
         self.ingredients = ingredients
 
+    def get_number_of_steps(self):
+        return len(self.steps)
+
+    def get_ingredients(self):
+        return self.ingredients
+
     def get_step(self, i):
         """
         Gets the i-th step of the recipe.
