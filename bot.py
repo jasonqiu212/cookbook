@@ -1,7 +1,10 @@
+import re
+import urllib.parse
+
 from download import download_recipe_by_name, download_recipe_by_url
 from extract import extract
 from parsed_recipe import ParsedRecipe
-import urllib.parse
+
 
 class Bot:
     """
@@ -11,7 +14,7 @@ class Bot:
     def __init__(self):
         self.history = []
         self.recipe = None
-        self.step_pointer = None
+        self.step_index = None
 
     def start(self):
         """
@@ -55,7 +58,7 @@ class Bot:
         Extracts and loads recipe into bot.
 
         Args:
-            raw_recipe: Raw recipe fetched from API
+            raw_recipe: Raw recipe fetched from API.
         """
         name, steps, ingredients = extract(raw_recipe)
         self.recipe = ParsedRecipe(name, steps, ingredients)
@@ -93,66 +96,72 @@ class Bot:
         """
         Displays all steps for this recipe.
         """
-        for i, step in enumerate(self.recipe["steps"], start=1):
-            print(f"Step {i}: {step}")
+        print('Here are all of the steps in this recipe:')
+        print(self.recipe)
 
     def show_current_step(self):
         """
         Displays the current step for this recipe.
         """
-        if self.current_step < len(self.recipe["steps"]):
-            print(f"Current Step {self.current_step + 1}: {self.recipe['steps'][self.current_step]}")
+        try:
+            current_step = self.recipe.get_step(self.step_index)
+        except ValueError:
+            print('Recipe has not been loaded yet.')
         else:
-            print("No more steps in the recipe.")
+            print(f"Step {self.step_index + 1}: {current_step}")
 
     def show_next_step(self):
         """
         Displays the next step.
         """
-        self.current_step += 1
-        self.show_current_step()
+        if self.step_index >= self.recipe.get_number_of_steps() - 1:
+            print('We are already at the last step of the recipe.')
+        else:
+            self.step_index += 1
+            self.show_current_step()
 
     def show_previous_step(self):
         """
         Displays the previous step.
         """
-        if self.current_step > 0:
-            self.current_step -= 1
-        self.show_current_step()
+        if self.step_index <= 0:
+            print('We are already at the first step of the recipe.')
+        else:
+            self.step_index -= 1
+            self.show_current_step()
 
     def show_step_i(self, i):
         """
         Displays the i-th step for this recipe.
 
         Args:
-            i: Index of step to show
+            i: Index of step to show.
         """
-        if 0 <= i-1 < len(self.recipe["steps"]):
-            print(f"Step {i}: {self.recipe['steps'][i-1]}")
+        try:
+            self.recipe.get_step(i - 1)
+        except IndexError:
+            print(
+                f'This is an invalid step number. Please enter a step number between 1 and {self.recipe.get_number_of_steps}')
         else:
-            print("Invalid step number.")
+            self.step_index = i
+            self.show_current_step()
 
     def show_ingredients(self):
         """
         Displays all ingredients needed for this recipe.
         """
-        print("Ingredients:")
-        for ingredient in self.recipe["ingredients"]:
-            print(f"{ingredient['name']}: {ingredient['quantity']}")
-
+        print('Here are all of the ingredients used in this recipe:')
+        for i, ingredient in enumerate(self.recipe.get_ingredients()):
+            print(f'{i}. {ingredient}')
 
     def show_google_search(self, query):
         """
-        Generates a Google search URL for the given query.
+        Displays a Google search URL for the given query.
 
         Args:
-            query: The user's query or question.
+            query: The user's query.
         """
-        base_url = "https://www.google.com/search?q="
+        base_url = 'https://www.google.com/search?q='
         query_encoded = urllib.parse.quote(query)
         search_url = base_url + query_encoded
-        return search_url
-        # TODO
-
-
-    
+        print(f'Here is a Google search for your question: {search_url}')
