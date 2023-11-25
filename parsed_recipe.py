@@ -34,3 +34,9 @@ class ParsedRecipe:
         if i < 0 or i >= len(self.steps):
             raise IndexError
         return self.steps[i]
+
+    def __repr__(self):
+        s = ''
+        for i, step in enumerate(self.steps):
+            s += f'Step {i + 1}: {step}\n'
+        return s.strip()
