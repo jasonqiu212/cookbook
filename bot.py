@@ -96,14 +96,14 @@ class Bot:
         Displays valid queries that the bot can understand.
         """
         print('Here are the queries and questions I can answer:')
-        print('help: Display the supported queries and questions')
-        print('quit: Exit the chatbot')
-        print('steps: Show all steps of the recipe')
-        print('current step: Show the current step')
-        print('next step: Show the next step')
-        print('previous step: Show the previous step')
-        print('step <number>: Show a specific step')
-        print('ingredients: Show the ingredients of the recipe')
+        print('- \'Help\': Display the supported queries and questions')
+        print('- \'Quit\': Exit the chatbot')
+        print('- \'Show all steps\': Show all steps of the recipe')
+        print('- \'Show all ingredients\': Show the ingredients of the recipe')
+        print('- \'Repeat\': Show the current step')
+        print('- \'Go to the next step\': Show the next step')
+        print('- \'Go back one step\': Show the previous step')
+        print('- \'Take me to step <STEP_NUMBER>\': Show a specific step')
 
     def show_steps(self):
         """
