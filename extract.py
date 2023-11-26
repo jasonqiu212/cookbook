@@ -1,5 +1,8 @@
 """This file provides operations to extract information."""
 
+import re
+
+import ftfy
 import spacy
 
 from ingredient import Ingredient
@@ -9,6 +12,14 @@ from step import Step
 # TODO: Method for extracting ingredients
 # TODO: Method for extracting tools, utensils, and parameters
 nlp = spacy.load("en_core_web_sm")
+
+
+def preprocess(str):
+    """
+    Fixes mojibake and removes extra whitespace.
+    """
+    str = ftfy.fix_text(str)
+    return re.sub('\s+', ' ', str)
 
 
 def is_imperative(sentence):
