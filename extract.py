@@ -34,12 +34,9 @@ def is_imperative(sentence):
     """
     doc = nlp(sentence)
 
-    for token in doc:
-        if token.dep_ == "ROOT" and token.pos_ == "VERB" and token.tag_ == "VB":
-            has_no_explicit_subject = not any(
-                child.dep_ in ["nsubj", "nsubjpass"] for child in token.children)
-            if has_no_explicit_subject:
-                return True
+    first_token = doc[0]
+    if first_token.pos_ == 'VERB':
+        return True
     return False
 
 
