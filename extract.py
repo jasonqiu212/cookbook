@@ -40,6 +40,35 @@ def is_imperative(sentence):
     return False
 
 
+def extract_steps(raw_instructions):
+    """
+    Extracts steps from recipe.
+
+    Args:
+        raw_instructions: String representing the instructions in the recipe.
+
+    Returns:
+        List of steps.
+    """
+    raw_steps = []
+    instructions = preprocess(raw_instructions)
+    instruction_sentences = instructions.split('. ')
+    l = 0
+    r = 1
+    while r < len(instruction_sentences):
+        sentence = instruction_sentences[r] + '.'
+        if is_imperative(sentence):
+            raw_steps.append('. '.join(instruction_sentences[l:r]) + '.')
+            l = r
+        r = r + 1
+    raw_steps.append('. '.join(instruction_sentences[l:r]))
+
+    steps = []
+    for raw_step in raw_steps:
+        steps.append(Step(raw_step, [], [], [], [], []))
+    return steps
+
+
 def extract_ingredients(raw_ingredients):
     """
     Extracts ingredients from recipe.
@@ -75,9 +104,7 @@ def extract(raw_recipe):
         Tuple of recipe name, ingredients and steps with annotations
     """
     name = raw_recipe['name']
-    steps = []
+    steps = extract_steps(raw_recipe['instructions'])
     ingredients = extract_ingredients(raw_recipe['ingredients'])
-
-    # TODO: Include extraction methods here
 
     return name, steps, ingredients
