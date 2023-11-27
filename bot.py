@@ -90,6 +90,8 @@ class Bot:
                 i = re.search(
                     'take me to step [\d]+', question).group().split()[-1]
                 self.show_step_i(i)
+            elif re.search('what is a', question) or re.search('how do i', question):
+                self.show_google_search(question)
             # TODO: Add other cases using regular expression
 
     def show_help(self):
@@ -105,6 +107,8 @@ class Bot:
         print('- \'Go to the next step\': Show the next step')
         print('- \'Go back one step\': Show the previous step')
         print('- \'Take me to step <STEP_NUMBER>\': Show a specific step')
+        print('- \'What is a <INGREDIENT/TOOL/UTENSIL>\': Ask a question on an ingredient/tool/utensil')
+        print('- \'How do I <TECHNIQUE>\': Ask a question on a technique')
 
     def show_steps(self):
         """
