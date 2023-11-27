@@ -152,12 +152,12 @@ class Bot:
             i: Index of step to show.
         """
         try:
-            self.recipe.get_step(i - 1)
+            self.recipe.get_step(int(i) - 1)
         except IndexError:
             print(
-                f'This is an invalid step number. Please enter a step number between 1 and {self.recipe.get_number_of_steps}')
+                f'This is an invalid step number. Please enter a step number between 1 and {self.recipe.get_number_of_steps()}')
         else:
-            self.step_index = i
+            self.step_index = int(i) - 1
             self.show_current_step()
 
     def show_ingredients(self):
