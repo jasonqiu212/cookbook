@@ -63,7 +63,7 @@ class Bot:
         """
         name, steps, ingredients = extract(raw_recipe)
         self.recipe = ParsedRecipe(name, steps, ingredients)
-        self.step_pointer = 0
+        self.step_index = 0
 
     def answer_queries(self):
         """
