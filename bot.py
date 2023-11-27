@@ -165,7 +165,7 @@ class Bot:
         """
         print('Here are all of the ingredients used in this recipe:')
         for i, ingredient in enumerate(self.recipe.get_ingredients()):
-            print(f'{i}. {ingredient}')
+            print(f'{i + 1}. {ingredient}')
 
     def show_google_search(self, query):
         """
