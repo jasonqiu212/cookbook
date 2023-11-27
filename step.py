@@ -10,3 +10,6 @@ class Step:
         self.tools = tools
         self.utensils = utensils
         self.parameters = parameters
+
+    def __repr__(self):
+        return self.text
