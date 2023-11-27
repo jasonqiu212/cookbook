@@ -49,8 +49,9 @@ class Bot:
                 print(
                     'Sorry, I did not understand that. Please enter either 1 or 2 to indicate your choice.')
 
-        print('Thanks! Let\'s start working with \"{}\". What do you want to do?'.format(
-            self.recipe.name))
+        print(f'Thanks! Let\'s start working with \"{self.recipe.name}\".')
+        self.show_current_step()
+        print('What do you wish to do next?')
         print('Hint: Not sure what to ask? Enter \"help\" to show the supported queries and questions.')
 
     def load_recipe(self, raw_recipe):
