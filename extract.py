@@ -8,9 +8,6 @@ import spacy
 from ingredient import Ingredient
 from step import Step
 
-# TODO: Method for extracting cooking actions
-# TODO: Method for extracting ingredients
-# TODO: Method for extracting tools, utensils, and parameters
 nlp = spacy.load("en_core_web_sm")
 
 
@@ -27,7 +24,7 @@ def is_imperative(sentence):
     Checks if sentence is imperative.
 
     Args:
-        sentence: Sentence to check
+        sentence: Sentence to check.
 
     Returns:
         True, if sentence is imperative. False otherwise.
@@ -38,6 +35,25 @@ def is_imperative(sentence):
     if first_token.pos_ == 'VERB':
         return True
     return False
+
+
+def get_verbs(sentence):
+    """
+    Extracts the verbs from a sentence.
+
+    Args:
+        sentence: Sentence to extract from. 
+
+    Returns:
+        List of verbs.
+    """
+    doc = nlp(sentence)
+
+    verbs = []
+    for token in doc:
+        if token.pos_ == 'VERB':
+            verbs.append(token.text.lower())
+    return verbs
 
 
 def extract_steps(raw_instructions):
@@ -65,7 +81,15 @@ def extract_steps(raw_instructions):
 
     steps = []
     for raw_step in raw_steps:
-        steps.append(Step(raw_step, [], [], [], [], []))
+        actions = get_verbs(raw_step)
+
+        # TODO
+        ingredients = []
+        tools = []
+        utensils = []
+        parameters = []
+        steps.append(Step(raw_step, actions, ingredients,
+                     tools, utensils, parameters))
     return steps
 
 

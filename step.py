@@ -3,9 +3,9 @@ class Step:
     Class representing a step in the cookbook with annotations. 
     """
 
-    def __init__(self, text, action, ingredients, tools, utensils, parameters):
+    def __init__(self, text, actions, ingredients, tools, utensils, parameters):
         self.text = text
-        self.action = action
+        self.actions = actions
         self.ingredients = ingredients
         self.tools = tools
         self.utensils = utensils
