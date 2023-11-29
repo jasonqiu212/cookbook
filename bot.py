@@ -15,6 +15,7 @@ class Bot:
         self.history = []
         self.recipe = None
         self.step_index = None
+        self.last_mentioned_action = None
 
     def start(self):
         """
@@ -65,6 +66,9 @@ class Bot:
         self.recipe = ParsedRecipe(name, steps, ingredients)
         self.step_index = 0
 
+        # TODO
+        self.last_mentioned_action = None
+
     def answer_queries(self):
         """
         Answers user's queries.
@@ -92,6 +96,8 @@ class Bot:
                 self.show_step_i(i)
             elif re.search('what is a', question) or re.search('how do i', question):
                 self.show_google_search(question)
+            elif re.search('how do i do that', question):
+                self.show_vague_how_to()
             # TODO: Add other cases using regular expression
 
     def show_help(self):
@@ -109,6 +115,7 @@ class Bot:
         print('- \'Take me to step <STEP_NUMBER>\': Show a specific step')
         print('- \'What is a <INGREDIENT/TOOL/UTENSIL>\': Ask a question on an ingredient/tool/utensil')
         print('- \'How do I <TECHNIQUE>\': Ask a question on a technique')
+        print('- \'How do I do that?\': Ask a question on the previously mentioned task')
 
     def show_steps(self):
         """
@@ -183,3 +190,9 @@ class Bot:
         query_encoded = urllib.parse.quote(query)
         search_url = base_url + query_encoded
         print(f'Here is a Google search for your question: {search_url}')
+
+    def show_vague_how_to(self):
+        """
+        Displays an answer to a vague how to question using conversation history.
+        """
+        # TODO
