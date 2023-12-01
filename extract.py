@@ -57,6 +57,30 @@ def get_verbs(imperative_sentence):
     return verbs
 
 
+def get_nouns_compounds(sentence):
+    """
+    Extracts compounds that behave as a single noun from a sentence.
+
+    Args:
+        sentence: Sentence to extract from. 
+
+    Returns:
+        List of compounds.
+    """
+    doc = nlp(sentence)
+
+    compounds = []
+    for token in doc:
+        if token.pos_ == 'NOUN':
+            compound = []
+            for child in token.children:
+                if child.dep_ == 'compound':
+                    compound.append(child.text.lower())
+            compound.append(token.text.lower())
+            compounds.append(' '.join(compound))
+    return compounds
+
+
 def get_direct_objects(sentence):
     """
     Extracts the direct objects from a sentence.
