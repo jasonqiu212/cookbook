@@ -203,7 +203,7 @@ def extract_ingredients(raw_ingredients):
             # i.e. Ingredient is countable
             if token.isnumeric():
                 ingredient = Ingredient(
-                    name, token, Ingredient.COUNTABLE_MEASUREMENT, [])
+                    name, int(token), Ingredient.COUNTABLE_MEASUREMENT, [])
 
             # Single token representing '<DESCRIPTOR>'
             elif token.isalpha():
@@ -214,7 +214,7 @@ def extract_ingredients(raw_ingredients):
             else:
                 numeric_match = re.search('\d+', token)
                 split_index = numeric_match.end() if numeric_match else len(token) + 1
-                q = token[:split_index]
+                q = int(token[:split_index])
                 m = token[split_index:]
                 ingredient = Ingredient(name, q, m, [])
 
