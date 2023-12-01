@@ -1,3 +1,6 @@
+from units import convert_imperial_to_metric, convert_metric_to_imperial
+
+
 class ParsedRecipe:
     """
     Class representing a parsed recipe.
@@ -34,6 +37,25 @@ class ParsedRecipe:
         if i < 0 or i >= len(self.steps):
             raise IndexError
         return self.steps[i]
+
+    def convert_units(self, target_unit):
+        """
+        Converts the units in this recipe to the target unit.
+
+        Args:
+            target_unit: Target unit. Valid units are 'METRIC' and 'IMPERIAL'.
+        """
+        if target_unit != 'METRIC' and target_unit != 'IMPERIAL':
+            return
+        for i in self.ingredients:
+            if i.has_no_quantity() or i.is_countable():
+                continue
+            if target_unit == 'METRIC':
+                i.quantity, i.measurement = convert_imperial_to_metric(
+                    i.quantity, i.measurement)
+            elif target_unit == 'IMPERIAL':
+                i.quantity, i.measurement = convert_metric_to_imperial(
+                    i.quantity, i.measurement)
 
     def __repr__(self):
         s = ''

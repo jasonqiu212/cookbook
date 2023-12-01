@@ -38,6 +38,12 @@ class Ingredient:
         contains_str = str in self.name
         return editdistance.eval(str, self.name) < 2 or contains_str
 
+    def is_countable(self):
+        return self.measurement == Ingredient.COUNTABLE_MEASUREMENT
+
+    def has_no_quantity(self):
+        return self.measurement == Ingredient.NO_QUANTITY
+
     def __repr__(self):
         descriptors_str = ', ' + ' and '.join(
             self.descriptors) if self.descriptors else ''
