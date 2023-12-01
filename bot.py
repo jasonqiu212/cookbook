@@ -103,6 +103,10 @@ class Bot:
                 self.show_vague_how_to()
             elif question == 'what do i need':
                 self.show_current_step_ingredients()
+            elif question == 'convert units':
+                convert_to = self.get_unit_conversion_choice()
+                self.recipe.convert_units(convert_to)
+                self.show_ingredients()
             # TODO: Add other cases using regular expression
 
     def show_help(self):
@@ -212,3 +216,20 @@ class Bot:
             Ingredient.show_ingredients(step_ingredients)
         else:
             print('No ingredients are needed for this step.')
+
+    def get_unit_conversion_choice(self):
+        print(
+            'Got it! What unit which you like to convert to?')
+        print('[1] Metric')
+        print('[2] Imperial')
+        while True:
+            query_choice = input('> ')
+            if query_choice == '1':
+                print('Okay! Converting to metric units now!')
+                return 'METRIC'
+            if query_choice == '2':
+                print('Okay! Converting to imperial units now!')
+                return 'IMPERIAL'
+            else:
+                print(
+                    'Sorry, I did not understand that. Please enter either 1 or 2 to indicate your choice.')
