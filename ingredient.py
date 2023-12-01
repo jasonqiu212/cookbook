@@ -23,7 +23,8 @@ class Ingredient:
         Returns:
             True, if similar. False otherwise.
         """
-        return editdistance.eval(str, self.name) < 5
+        contains_str = str in self.name
+        return editdistance.eval(str, self.name) < 2 or contains_str
 
     def __repr__(self):
         if self.measurement == Ingredient.COUNTABLE_MEASUREMENT:
