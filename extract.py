@@ -57,7 +57,7 @@ def get_verbs(imperative_sentence):
     return verbs
 
 
-def get_nouns_compounds(sentence):
+def get_noun_compounds(sentence):
     """
     Extracts compounds that behave as a single noun from a sentence.
 
@@ -74,7 +74,7 @@ def get_nouns_compounds(sentence):
         if token.pos_ == 'NOUN':
             compound = []
             for child in token.children:
-                if child.dep_ == 'compound':
+                if child.dep_ == 'compound' or child.dep_ == 'nmod':
                     compound.append(child.text.lower())
             compound.append(token.text.lower())
             compounds.append(' '.join(compound))
