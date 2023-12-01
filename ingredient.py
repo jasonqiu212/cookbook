@@ -7,6 +7,7 @@ class Ingredient:
     """
 
     COUNTABLE_MEASUREMENT = 'COUNTS'
+    NO_QUANTITY = -1
 
     def show_ingredients(ingredients):
         """
@@ -18,10 +19,11 @@ class Ingredient:
         for i, ingredient in enumerate(ingredients):
             print(f'{i + 1}. {ingredient}')
 
-    def __init__(self, name, quantity, measurement):
+    def __init__(self, name, quantity, measurement, descriptors):
         self.name = name
         self.quantity = quantity
         self.measurement = measurement
+        self.descriptors = descriptors
 
     def is_similar(self, str):
         """
@@ -37,6 +39,10 @@ class Ingredient:
         return editdistance.eval(str, self.name) < 2 or contains_str
 
     def __repr__(self):
+        descriptors_str = ', ' + ' and '.join(
+            self.descriptors) if self.descriptors else ''
+        if self.quantity == Ingredient.NO_QUANTITY:
+            return f'{self.name}{descriptors_str}'
         if self.measurement == Ingredient.COUNTABLE_MEASUREMENT:
-            return f'{self.quantity} {self.name}'
-        return f'{self.quantity} {self.measurement} of {self.name}'
+            return f'{self.quantity} {self.name}{descriptors_str}'
+        return f'{self.quantity} {self.measurement} of {self.name}{descriptors_str}'

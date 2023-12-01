@@ -191,14 +191,75 @@ def extract_ingredients(raw_ingredients):
     ingredients = []
     for name, quantity in raw_ingredients.items():
         quantity_word_list = quantity.split()
+        ingredient = None
+
         if len(quantity_word_list) == 0:
-            ingredients.append(Ingredient(name, '', ''))
+            ingredient = Ingredient(
+                name, Ingredient.NO_QUANTITY, Ingredient.COUNTABLE_MEASUREMENT, [])
         elif len(quantity_word_list) == 1:
-            ingredients.append(Ingredient(
-                name, quantity_word_list[0], Ingredient.COUNTABLE_MEASUREMENT))
+            token = quantity_word_list[0]
+
+            # Single token in format of '<QUANTITY>'
+            # i.e. Ingredient is countable
+            if token.isnumeric():
+                ingredient = Ingredient(
+                    name, token, Ingredient.COUNTABLE_MEASUREMENT, [])
+
+            # Single token representing '<DESCRIPTOR>'
+            elif token.isalpha():
+                ingredient = Ingredient(
+                    name, Ingredient.NO_QUANTITY, Ingredient.COUNTABLE_MEASUREMENT, [token])
+
+            # Single token in format of '<QUANTITY><MEASUREMENT>'
+            else:
+                numeric_match = re.search('\d+', token)
+                split_index = numeric_match.end() if numeric_match else len(token) + 1
+                q = token[:split_index]
+                m = token[split_index:]
+                ingredient = Ingredient(name, q, m, [])
+
         else:
-            ingredients.append(Ingredient(
-                name, quantity_word_list[0], ' '.join(quantity_word_list[1:])))
+            parenthesis_matches = re.findall('\(.+\)', quantity)
+            for match in parenthesis_matches:
+                quantity = quantity.replace(match, '')
+
+            quantity_word_list = quantity.split()
+
+            # Multiple tokens in format of '<FRACTION_QUANTITY> <MEASUREMENT> DESCRIPTORS>'
+            if quantity_word_list[0].isnumeric() and re.search('\d\/\d', quantity_word_list[1]):
+                fraction_token = quantity_word_list[1]
+                numerator_match = re.search('\d', fraction_token)
+                split_index = numerator_match.end()
+                numerator, denominator = int(fraction_token[:split_index]), int(
+                    fraction_token[split_index + 1:])
+                q = int(quantity_word_list[0]) + \
+                    round(numerator / denominator, 2)
+
+                m = quantity_word_list[2] if len(
+                    quantity_word_list) >= 3 else Ingredient.COUNTABLE_MEASUREMENT
+                d = ' '.join(quantity_word_list[3:]).split(' and ') if len(
+                    quantity_word_list) >= 4 else []
+                d = list(map(lambda s: s.strip(), d))
+                ingredient = Ingredient(name, q, m, d)
+
+            # Multiple tokens in format of '<QUANTITY> <MEASUREMENT> <DESCRIPTORS>'
+            elif quantity_word_list[0].isnumeric():
+                q = int(quantity_word_list[0])
+                m = quantity_word_list[1]
+                d = ' '.join(quantity_word_list[2:]).split(' and ') if len(
+                    quantity_word_list) >= 3 else []
+                d = list(map(lambda s: s.strip(), d))
+                ingredient = Ingredient(
+                    name, q, m, d)
+
+            # Multiple tokens that are all descriptors
+            else:
+                d = quantity.split(' and ')
+                d = list(map(lambda s: s.strip(), d))
+                ingredient = Ingredient(
+                    name, Ingredient.NO_QUANTITY, Ingredient.COUNTABLE_MEASUREMENT, d)
+
+        ingredients.append(ingredient)
     return ingredients
 
 
