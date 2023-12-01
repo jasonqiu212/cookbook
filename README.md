@@ -53,4 +53,4 @@ Congratulations! You have successfully initialized your cookbook.
 ## Acknowledgements
 
 - [TheMealDB](https://www.themealdb.com/)
-- Python libraries used: [spaCy](https://spacy.io/), [ftfy](https://ftfy.readthedocs.io/en/latest/#)
+- Python libraries used: [spaCy](https://spacy.io/), [ftfy](https://ftfy.readthedocs.io/en/latest/#), [editdistance](https://pypi.org/project/editdistance/)
