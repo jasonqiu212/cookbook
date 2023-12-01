@@ -57,6 +57,44 @@ def get_verbs(imperative_sentence):
     return verbs
 
 
+def get_direct_objects(sentence):
+    """
+    Extracts the direct objects from a sentence.
+
+    Args:
+        sentence: Sentence to extract from. 
+
+    Returns:
+        List of direct objects.
+    """
+    doc = nlp(sentence)
+
+    direct_objects = []
+    for token in doc:
+        if token.dep_ == 'dobj':
+            direct_objects.append(token.text.lower())
+    return direct_objects
+
+
+def get_indirect_objects(sentence):
+    """
+    Extracts the indirect objects from a sentence.
+
+    Args:
+        sentence: Sentence to extract from. 
+
+    Returns:
+        List of indirect objects.
+    """
+    doc = nlp(sentence)
+
+    indirect_objects = []
+    for token in doc:
+        if token.dep_ == 'pobj':
+            indirect_objects.append(token.text.lower())
+    return indirect_objects
+
+
 def extract_steps(raw_instructions):
     """
     Extracts steps from recipe.
