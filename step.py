@@ -11,5 +11,8 @@ class Step:
         self.utensils = utensils
         self.parameters = parameters
 
+    def get_ingredients(self):
+        return self.ingredients
+
     def __repr__(self):
         return self.text

@@ -3,6 +3,7 @@ import urllib.parse
 
 from download import download_recipe_by_name, download_recipe_by_url
 from extract import extract
+from ingredient import Ingredient
 from parsed_recipe import ParsedRecipe
 
 
@@ -100,6 +101,8 @@ class Bot:
                 self.show_google_search(question)
             elif re.search('how do i do that', question):
                 self.show_vague_how_to()
+            elif question == 'what do i need':
+                self.show_current_step_ingredients()
             # TODO: Add other cases using regular expression
 
     def show_help(self):
@@ -178,8 +181,7 @@ class Bot:
         Displays all ingredients needed for this recipe.
         """
         print('Here are all of the ingredients used in this recipe:')
-        for i, ingredient in enumerate(self.recipe.get_ingredients()):
-            print(f'{i + 1}. {ingredient}')
+        Ingredient.show_ingredients(self.recipe.get_ingredients())
 
     def show_google_search(self, query):
         """
@@ -198,3 +200,15 @@ class Bot:
         Displays an answer to a vague how to question using conversation history.
         """
         # TODO
+
+    def show_current_step_ingredients(self):
+        """
+        Displays a list of ingredients for the current step.
+        """
+        step_ingredients = self.recipe.get_step(
+            self.step_index).get_ingredients()
+        if step_ingredients:
+            print('Here are all of the ingredients used in this step:')
+            Ingredient.show_ingredients(step_ingredients)
+        else:
+            print('No ingredients are needed for this step.')
