@@ -86,13 +86,13 @@ class Bot:
                 self.show_ingredients()
             elif question == 'repeat':
                 self.show_current_step()
-            elif question == 'go to the next step':
+            elif question == 'next':
                 self.show_next_step()
-            elif question == 'go back one step':
+            elif question == 'go back':
                 self.show_previous_step()
-            elif re.search('take me to step [\d]+', question):
+            elif re.search('step [\d]+', question):
                 i = re.search(
-                    'take me to step [\d]+', question).group().split()[-1]
+                    'step [\d]+', question).group().split()[-1]
                 self.show_step_i(i)
             elif re.search('what is a', question) or re.search('how do i', question):
                 self.show_google_search(question)
@@ -110,9 +110,9 @@ class Bot:
         print('- \'Show all steps\': Show all steps of the recipe')
         print('- \'Show all ingredients\': Show the ingredients of the recipe')
         print('- \'Repeat\': Show the current step')
-        print('- \'Go to the next step\': Show the next step')
-        print('- \'Go back one step\': Show the previous step')
-        print('- \'Take me to step <STEP_NUMBER>\': Show a specific step')
+        print('- \'Next\': Show the next step')
+        print('- \'Go back\': Show the previous step')
+        print('- \'Step <STEP_NUMBER>\': Show a specific step')
         print('- \'What is a <INGREDIENT/TOOL/UTENSIL>\': Ask a question on an ingredient/tool/utensil')
         print('- \'How do I <TECHNIQUE>\': Ask a question on a technique')
         print('- \'How do I do that?\': Ask a question on the previously mentioned task')
