@@ -114,6 +114,9 @@ class Bot:
         Displays valid queries that the bot can understand.
         """
         print('Here are the queries and questions I can answer:')
+        print()
+
+        print('Basics:')
         print('- \'Help\': Display the supported queries and questions')
         print('- \'Quit\': Exit the chatbot')
         print('- \'Show all steps\': Show all steps of the recipe')
@@ -122,9 +125,18 @@ class Bot:
         print('- \'Next\': Show the next step')
         print('- \'Go back\': Show the previous step')
         print('- \'Step <STEP_NUMBER>\': Show a specific step')
+        print()
+
+        print('Questions about the current step:')
         print('- \'What is a <INGREDIENT/TOOL/UTENSIL>\': Ask a question on an ingredient/tool/utensil')
         print('- \'How do I <TECHNIQUE>\': Ask a question on a technique')
-        print('- \'How do I do that?\': Ask a question on the previously mentioned task')
+        print('- \'How do I do that?\': Ask a question on a previously mentioned task')
+        print('- \'What do I need?\': Ask about the ingredients needed for this step')
+        print()
+
+        print('Transform:')
+        print(
+            '- \'Convert units\': Convert the units from imperial to metric, or vice versa')
 
     def show_steps(self):
         """
