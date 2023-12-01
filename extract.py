@@ -119,12 +119,34 @@ def get_indirect_objects(sentence):
     return indirect_objects
 
 
-def extract_steps(raw_instructions):
+def extract_ingredients_from_step(sentence, ingredients):
+    """
+    Extracts ingredients from sentence that appear in list of ingredients.
+
+    Args:
+        sentence: Sentence to extract from.
+        ingredients: List of ingredients for recipe.
+
+    Returns:
+        List of ingredients in sentence.
+    """
+    noun_compounds = get_noun_compounds(sentence)
+    step_ingredients = set()
+    for noun_compound in noun_compounds:
+        for ingredient in ingredients:
+            if ingredient.is_similar(noun_compound):
+                step_ingredients.add(ingredient)
+                break
+    return list(step_ingredients)
+
+
+def extract_steps(raw_instructions, ingredients):
     """
     Extracts steps from recipe.
 
     Args:
         raw_instructions: String representing the instructions in the recipe.
+        ingredients: List of ingredients for recipe.
 
     Returns:
         List of steps.
@@ -145,13 +167,13 @@ def extract_steps(raw_instructions):
     steps = []
     for raw_step in raw_steps:
         actions = get_verbs(raw_step)
+        step_ingredients = extract_ingredients_from_step(raw_step, ingredients)
 
         # TODO
-        ingredients = []
         tools = []
         utensils = []
         parameters = []
-        steps.append(Step(raw_step, actions, ingredients,
+        steps.append(Step(raw_step, actions, step_ingredients,
                      tools, utensils, parameters))
     return steps
 
@@ -161,7 +183,7 @@ def extract_ingredients(raw_ingredients):
     Extracts ingredients from recipe.
 
     Args:
-        raw_ingredients: Dictionary with ingredient name mapped to quantity
+        raw_ingredients: Dictionary with ingredient name mapped to quantity.
 
     Returns:
         List of ingredients.
@@ -185,13 +207,13 @@ def extract(raw_recipe):
     Extracts name, ingredients, and steps with annotations from recipe.
 
     Args:
-        raw_recipe: Dictionary representing recipe to extract from
+        raw_recipe: Dictionary representing recipe to extract from.
 
     Returns:
-        Tuple of recipe name, ingredients and steps with annotations
+        Tuple of recipe name, ingredients and steps with annotations.
     """
     name = raw_recipe['name']
-    steps = extract_steps(raw_recipe['instructions'])
     ingredients = extract_ingredients(raw_recipe['ingredients'])
+    steps = extract_steps(raw_recipe['instructions'], ingredients)
 
     return name, steps, ingredients
