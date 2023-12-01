@@ -37,20 +37,21 @@ def is_imperative(sentence):
     return False
 
 
-def get_verbs(sentence):
+def get_verbs(imperative_sentence):
     """
     Extracts the verbs from an imperative sentence.
 
     Args:
-        sentence: Sentence to extract from. 
+        imperative_sentence: Imperative sentence to extract from. 
 
     Returns:
         List of verbs.
     """
-    doc = nlp(sentence)
+    doc = nlp(imperative_sentence)
 
     verbs = []
     for i, token in enumerate(doc):
+        # Assuming sentence is imperative, 1st token should be an action
         if i == 0 or token.tag_ == 'VB':
             verbs.append(token.text.lower())
     return verbs
