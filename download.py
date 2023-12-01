@@ -66,11 +66,11 @@ def process_recipe_from_api(data):
     recipe['instructions'] = data['meals'][0]['strInstructions']
     recipe['ingredients'] = {}
     for i in range(1, 21):
-        ingredient = data['meals'][0]['strIngredient{}'.format(i)].lower()
-        measure = data['meals'][0]['strMeasure{}'.format(i)].lower()
+        ingredient = data['meals'][0]['strIngredient{}'.format(i)]
+        measure = data['meals'][0]['strMeasure{}'.format(i)]
 
-        if ingredient == '' or measure == '':
+        if not ingredient or ingredient == '' or not measure or measure == '':
             break
 
-        recipe['ingredients'][ingredient] = measure
+        recipe['ingredients'][ingredient.lower()] = measure.lower()
     return recipe
