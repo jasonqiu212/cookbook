@@ -104,8 +104,8 @@ class Bot:
             elif question == 'what do i need':
                 self.show_current_step_ingredients()
             elif question == 'convert units':
-                convert_to = self.get_unit_conversion_choice()
-                self.recipe.convert_units(convert_to)
+                target_unit = self.get_unit_conversion_choice()
+                self.recipe.convert_units(target_unit)
                 self.show_ingredients()
             # TODO: Add other cases using regular expression
 
@@ -230,6 +230,9 @@ class Bot:
             print('No ingredients are needed for this step.')
 
     def get_unit_conversion_choice(self):
+        """
+        Gets target unit from user.
+        """
         print(
             'Got it! What unit which you like to convert to?')
         print('[1] Metric')
