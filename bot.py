@@ -98,6 +98,10 @@ class Bot:
                 self.show_ingredients()
             elif question == 'show all tools':
                 self.show_tools()
+            elif re.search('when do i need the [\w|\s]+', question):
+                tool = re.search(
+                    'when do i need the [\w|\s]+', question).group()[19:]
+                self.show_step_for_tool(tool)
             elif re.search('how do i do that', question):
                 self.show_vague_how_to()
             elif re.search('what is a', question) or re.search('how do i', question):
@@ -141,7 +145,8 @@ class Bot:
         print('- \'Show all steps\': Show all steps of the recipe')
         print('- \'Show all ingredients\': Show the ingredients needed for the recipe')
         print('- \'Show all tools\': Show the tools needed for the recipe')
-        print('- \'When do I need <TOOL>?\': Show the step number a tool is first used in')
+        print(
+            '- \'When do I need the <TOOL>?\': Show the step number a tool is first used in')
         print()
 
         print('Questions about the current step:')
@@ -225,6 +230,20 @@ class Bot:
         """
         print('Here are all of the tools used in this recipe:')
         self.show_list_in_numbered_list(list(self.recipe.get_tools().keys()))
+
+    def show_step_for_tool(self, query):
+        """
+        Displays the step number where the tool is used in.
+
+        Args:
+            query: The user's tool query.
+        """
+        for tool in self.recipe.get_tools().keys():
+            if query in tool:
+                print(
+                    f'{tool.capitalize()} is/are used in step {self.recipe.get_tools()[tool] + 1}.')
+                return
+        print('Sorry, I cannot find the tool you are looking for in the recipe.')
 
     def show_google_search(self, query):
         """
