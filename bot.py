@@ -286,7 +286,7 @@ class Bot:
                 print(
                     'Sorry, I did not understand that. Please enter either 1 or 2 to indicate your choice.')
 
-    def show_list_in_numbered_list(lst):
+    def show_list_in_numbered_list(self, lst):
         """
         Displays list in numbered list format.
 
