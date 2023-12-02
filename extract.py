@@ -82,44 +82,6 @@ def get_noun_compounds(sentence):
     return compounds
 
 
-def get_direct_objects(sentence):
-    """
-    Extracts the direct objects from a sentence.
-
-    Args:
-        sentence: Sentence to extract from. 
-
-    Returns:
-        List of direct objects.
-    """
-    doc = nlp(sentence)
-
-    direct_objects = []
-    for token in doc:
-        if token.dep_ == 'dobj':
-            direct_objects.append(token.text.lower())
-    return direct_objects
-
-
-def get_indirect_objects(sentence):
-    """
-    Extracts the indirect objects from a sentence.
-
-    Args:
-        sentence: Sentence to extract from. 
-
-    Returns:
-        List of indirect objects.
-    """
-    doc = nlp(sentence)
-
-    indirect_objects = []
-    for token in doc:
-        if token.dep_ == 'pobj':
-            indirect_objects.append(token.text.lower())
-    return indirect_objects
-
-
 def extract_ingredients_from_step(sentence, ingredients):
     """
     Extracts ingredients from sentence that appear in list of ingredients.
@@ -141,6 +103,67 @@ def extract_ingredients_from_step(sentence, ingredients):
     return list(step_ingredients)
 
 
+def get_indirect_objects(sentence):
+    """
+    Extracts the indirect objects from a sentence.
+
+    Args:
+        sentence: Sentence to extract from. 
+
+    Returns:
+        List of indirect objects.
+    """
+    doc = nlp(sentence)
+
+    indirect_objects = []
+    for token in doc:
+        if token.dep_ == 'pobj':
+            indirect_objects.append(token.text.lower())
+    return indirect_objects
+
+
+def extract_tools(sentence, ingredients, name):
+    """
+    Extracts kitchen tools from sentence.
+
+    Args:
+        sentence: Sentence to extract from.
+        ingredients: List of ingredients for recipe.
+        name: Name of recipe.
+
+    Returns:
+        List of strings representing tools used in this sentence.
+    """
+    indirect_objects = get_indirect_objects(sentence)
+    tools = []
+    for obj in indirect_objects:
+        if obj == 'mins' or obj == 'gas' or obj in name.lower():
+            continue
+        if any(ingredient.is_similar(obj) for ingredient in ingredients):
+            continue
+        tools.append(obj)
+
+    doc = nlp(sentence.lower())
+    i = 0
+    tool_compounds = []
+    for tool in tools:
+        while doc[i].text != tool:
+            i += 1
+
+        token = doc[i]
+
+        compound = []
+        for child in token.children:
+            if child.dep_ == 'compound' or child.dep_ == 'nmod' or child.dep_ == 'amod':
+                compound.append(child.text.lower())
+        compound.append(token.text.lower())
+        tool_compounds.append(' '.join(compound))
+
+        i += 1
+
+    return tool_compounds
+
+
 def extract_time_parameters(sentence):
     """
     Extracts time parameters from sentence.
@@ -158,6 +181,7 @@ def extract_time_parameters(sentence):
         if ent.label_ == 'TIME':
             time_entities.append(ent.text.lower())
 
+    doc = nlp(sentence.lower())
     i = 0
     actions = []
     for ent in time_entities:
@@ -246,13 +270,14 @@ def extract_temperature_parameters(sentence):
     return temperature_parameters
 
 
-def extract_steps(raw_instructions, ingredients):
+def extract_steps(raw_instructions, ingredients, name):
     """
     Extracts steps from recipe.
 
     Args:
         raw_instructions: String representing the instructions in the recipe.
         ingredients: List of ingredients for recipe.
+        name: Name of recipe.
 
     Returns:
         List of steps.
@@ -274,16 +299,13 @@ def extract_steps(raw_instructions, ingredients):
     for raw_step in raw_steps:
         actions = get_verbs(raw_step)
         step_ingredients = extract_ingredients_from_step(raw_step, ingredients)
-
-        # TODO
-        tools = []
-        utensils = []
+        tools = extract_tools(raw_step, ingredients, name)
         parameters = {
             'time': extract_time_parameters(raw_step),
             'temperature': extract_temperature_parameters(raw_step)
         }
         steps.append(Step(raw_step, actions, step_ingredients,
-                     tools, utensils, parameters))
+                     tools, parameters))
     return steps
 
 
@@ -395,6 +417,6 @@ def extract(raw_recipe):
     """
     name = raw_recipe['name']
     ingredients = extract_ingredients(raw_recipe['ingredients'])
-    steps = extract_steps(raw_recipe['instructions'], ingredients)
+    steps = extract_steps(raw_recipe['instructions'], ingredients, name)
 
     return name, steps, ingredients
