@@ -232,7 +232,6 @@ def extract_steps(raw_instructions, ingredients):
             'time': extract_time_parameters(raw_step),
             'temperature': extract_heat_parameters(raw_step)
         }
-        print(parameters)
         steps.append(Step(raw_step, actions, step_ingredients,
                      tools, utensils, parameters))
     return steps
