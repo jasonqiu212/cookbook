@@ -17,5 +17,8 @@ class Step:
     def get_time_parameters(self):
         return self.parameters['time']
 
+    def get_temperature_parameters(self):
+        return self.parameters['temperature']
+
     def __repr__(self):
         return self.text
