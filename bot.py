@@ -97,10 +97,10 @@ class Bot:
                 i = re.search(
                     'step [\d]+', question).group().split()[-1]
                 self.show_step_i(i)
-            elif re.search('what is a', question) or re.search('how do i', question):
-                self.show_google_search(question)
             elif re.search('how do i do that', question):
                 self.show_vague_how_to()
+            elif re.search('what is a', question) or re.search('how do i', question):
+                self.show_google_search(question)
             elif question == 'what do i need':
                 self.show_current_step_ingredients()
             elif question == 'how long':
@@ -118,6 +118,7 @@ class Bot:
         Displays valid queries that the bot can understand.
         """
         print('Here are the queries and questions I can answer:')
+        print('Tip: For convenience, I can detect the commands in lowercase and without punctuation too!')
         print()
 
         print('Basics:')
@@ -132,11 +133,12 @@ class Bot:
         print()
 
         print('Questions about the current step:')
+        print('- \'How do I do that?\': Ask a question on a previously mentioned task')
         print('- \'What is a <INGREDIENT/TOOL/UTENSIL>\': Ask a question on an ingredient/tool/utensil')
         print('- \'How do I <TECHNIQUE>\': Ask a question on a technique')
-        print('- \'How do I do that?\': Ask a question on a previously mentioned task')
         print('- \'What do I need?\': Ask about the ingredients needed for this step')
         print('- \'How long?\': Ask about the timings for this step')
+        print('- \'What temperature?\': Ask about the temperature settings for this step')
 
         print()
 
