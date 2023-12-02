@@ -8,12 +8,19 @@ class Step:
     Class representing a step in the cookbook with annotations. 
     """
 
-    def __init__(self, text, actions, ingredients, tools, parameters):
+    def __init__(self, text, actions, main_action, ingredients, tools, parameters):
         self.text = text
         self.actions = actions
+        self.main_action = main_action
         self.ingredients = ingredients
         self.tools = tools
         self.parameters = parameters
+
+    def get_actions(self):
+        return self.actions
+
+    def get_main_action(self):
+        return self.main_action
 
     def get_ingredients(self):
         return self.ingredients

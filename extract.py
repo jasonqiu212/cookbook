@@ -59,6 +59,31 @@ def get_verbs(imperative_sentence):
     return verbs
 
 
+def get_main_action(imperative_sentence, actions):
+    """
+    Extracts the main action from an imperative sentence.
+
+    Args:
+        imperative_sentence: Imperative sentence to extract from. 
+        actions: List of verbs in the imperative sentence.
+
+    Returns:
+        String representing the main action.
+    """
+    if not actions:
+        return ''
+
+    main_action = [actions[0]]
+    doc = nlp(imperative_sentence.lower())
+    for token in doc:
+        if token.text == main_action[0]:
+            for child in token.children:
+                if child.dep_ in ['dobj']:
+                    main_action.append(child.text)
+            break
+    return ' '.join(main_action)
+
+
 def get_noun_compounds(sentence):
     """
     Extracts compounds that behave as a single noun from a sentence.
@@ -299,13 +324,14 @@ def extract_steps(raw_instructions, ingredients, name):
     steps = []
     for raw_step in raw_steps:
         actions = get_verbs(raw_step)
+        main_action = get_main_action(raw_step, actions)
         step_ingredients = extract_ingredients_from_step(raw_step, ingredients)
         tools = extract_tools(raw_step, ingredients, name)
         parameters = {
             'time': extract_time_parameters(raw_step),
             'temperature': extract_temperature_parameters(raw_step)
         }
-        steps.append(Step(raw_step, actions, step_ingredients,
+        steps.append(Step(raw_step, actions, main_action, step_ingredients,
                      tools, parameters))
     return steps
 
