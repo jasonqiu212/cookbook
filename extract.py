@@ -160,10 +160,11 @@ def extract_tools(sentence, ingredients, name):
     Returns:
         List of strings representing tools used in this sentence.
     """
+    NON_TOOLS = ['mins', 'gas', 'heat', 'secs', 'it']
     indirect_objects = get_indirect_objects(sentence)
     tools = []
     for obj in indirect_objects:
-        if obj == 'mins' or obj == 'gas' or obj in name.lower():
+        if obj in NON_TOOLS or obj in name.lower():
             continue
         if any(ingredient.is_similar(obj) for ingredient in ingredients):
             continue
@@ -323,7 +324,6 @@ def extract_steps(raw_instructions, ingredients, name):
 
     steps = []
     for raw_step in raw_steps:
-        print(raw_step)
         actions = get_verbs(raw_step)
         main_action = get_main_action(raw_step, actions)
         step_ingredients = extract_ingredients_from_step(raw_step, ingredients)
