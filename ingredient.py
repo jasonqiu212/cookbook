@@ -9,16 +9,6 @@ class Ingredient:
     COUNTABLE_MEASUREMENT = 'COUNTS'
     NO_QUANTITY = -1
 
-    def show_ingredients(ingredients):
-        """
-        Displays ingredients in given list.
-
-        Args:
-            ingredients: List of ingredients to show.
-        """
-        for i, ingredient in enumerate(ingredients):
-            print(f'{i + 1}. {ingredient}')
-
     def __init__(self, name, quantity, measurement, descriptors):
         self.name = name
         self.quantity = quantity

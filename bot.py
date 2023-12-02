@@ -205,7 +205,7 @@ class Bot:
         Displays all ingredients needed for this recipe.
         """
         print('Here are all of the ingredients used in this recipe:')
-        Ingredient.show_ingredients(self.recipe.get_ingredients())
+        self.show_list_in_numbered_list(self.recipe.get_ingredients())
 
     def show_google_search(self, query):
         """
@@ -233,7 +233,7 @@ class Bot:
             self.step_index).get_ingredients()
         if step_ingredients:
             print('Here are all of the ingredients used in this step:')
-            Ingredient.show_ingredients(step_ingredients)
+            self.show_list_in_numbered_list(step_ingredients)
         else:
             print('No ingredients are needed for this step.')
 
@@ -285,3 +285,13 @@ class Bot:
             else:
                 print(
                     'Sorry, I did not understand that. Please enter either 1 or 2 to indicate your choice.')
+
+    def show_list_in_numbered_list(lst):
+        """
+        Displays list in numbered list format.
+
+        Args:
+            lst: List of strings to show.
+        """
+        for i, item in enumerate(lst):
+            print(f'{i + 1}. {item}')
