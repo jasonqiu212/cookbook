@@ -1,6 +1,5 @@
 """This file provides operations to download recipes."""
 
-import json
 import requests
 
 
@@ -34,21 +33,6 @@ def download_recipe_by_url(url):
     response = requests.get(url)
     response_json = response.json()
     return process_recipe_from_api(response_json)
-
-
-# def load_mock_recipe(file_name):
-#     """
-#     Loads test recipe JSON file.
-
-#     Args:
-#         file_name: File name containing mock recipe
-
-#     Returns:
-#         Dictionary containing recipe name, instructions, and ingredients of mock recipe
-#     """
-#     with open(file_name) as json_file:
-#         data = json.load(json_file)
-#         return load_recipe(data)
 
 
 def process_recipe_from_api(data):

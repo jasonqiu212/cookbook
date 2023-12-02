@@ -3,7 +3,6 @@ import urllib.parse
 
 from download import download_recipe_by_name, download_recipe_by_url
 from extract import extract
-from ingredient import Ingredient
 from parsed_recipe import ParsedRecipe
 
 
