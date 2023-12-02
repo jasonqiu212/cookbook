@@ -1,6 +1,7 @@
 """This file provides operations to extract information."""
 
 from collections import defaultdict
+import itertools
 import re
 
 import ftfy
@@ -405,18 +406,39 @@ def extract_ingredients(raw_ingredients):
     return ingredients
 
 
+def compile_tools(steps):
+    """
+    Compiles the tools used from each step.
+
+    Args:
+        steps: Steps to compile from.
+
+    Returns:
+        Dictionary with mapping from tool to step index that the tool is used in.
+    """
+    tools = {}
+    for i, step in enumerate(steps):
+        for tool in step.get_tools():
+            if tool in tools.keys():
+                continue
+            tools[tool] = i
+    return tools
+
+
 def extract(raw_recipe):
     """
-    Extracts name, ingredients, and steps with annotations from recipe.
+    Extracts name, steps with annotations, ingredients, and tools from the recipe.
 
     Args:
         raw_recipe: Dictionary representing recipe to extract from.
 
     Returns:
-        Tuple of recipe name, ingredients and steps with annotations.
+        Tuple of recipe name, steps with annotations, ingredients, and tools.
     """
     name = raw_recipe['name']
     ingredients = extract_ingredients(raw_recipe['ingredients'])
     steps = extract_steps(raw_recipe['instructions'], ingredients, name)
+    tools = compile_tools(steps)
+    print(tools)
 
-    return name, steps, ingredients
+    return name, steps, ingredients, tools

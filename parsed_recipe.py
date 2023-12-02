@@ -6,16 +6,20 @@ class ParsedRecipe:
     Class representing a parsed recipe.
     """
 
-    def __init__(self, name, steps, ingredients):
+    def __init__(self, name, steps, ingredients, tools):
         self.name = name
         self.steps = steps
         self.ingredients = ingredients
+        self.tools = tools
 
     def get_number_of_steps(self):
         return len(self.steps)
 
     def get_ingredients(self):
         return self.ingredients
+
+    def get_tools(self):
+        return self.tools
 
     def get_step(self, i):
         """

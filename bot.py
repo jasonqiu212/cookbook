@@ -64,8 +64,8 @@ class Bot:
         Args:
             raw_recipe: Raw recipe fetched from API.
         """
-        name, steps, ingredients = extract(raw_recipe)
-        self.recipe = ParsedRecipe(name, steps, ingredients)
+        name, steps, ingredients, tools = extract(raw_recipe)
+        self.recipe = ParsedRecipe(name, steps, ingredients, tools)
         self.step_index = 0
 
         # TODO
