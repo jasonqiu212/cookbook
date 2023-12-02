@@ -14,5 +14,8 @@ class Step:
     def get_ingredients(self):
         return self.ingredients
 
+    def get_time_parameters(self):
+        return self.parameters['time']
+
     def __repr__(self):
         return self.text

@@ -103,6 +103,8 @@ class Bot:
                 self.show_vague_how_to()
             elif question == 'what do i need':
                 self.show_current_step_ingredients()
+            elif question == 'how long':
+                self.show_current_step_time_parameters()
             elif question == 'convert units':
                 target_unit = self.get_unit_conversion_choice()
                 self.recipe.convert_units(target_unit)
@@ -132,6 +134,8 @@ class Bot:
         print('- \'How do I <TECHNIQUE>\': Ask a question on a technique')
         print('- \'How do I do that?\': Ask a question on a previously mentioned task')
         print('- \'What do I need?\': Ask about the ingredients needed for this step')
+        print('- \'How long?\': Ask about the timings for this step')
+
         print()
 
         print('Transform:')
@@ -228,6 +232,20 @@ class Bot:
             Ingredient.show_ingredients(step_ingredients)
         else:
             print('No ingredients are needed for this step.')
+
+    def show_current_step_time_parameters(self):
+        """
+        Displays the time parameters for the current step.
+        """
+        time_parameters = self.recipe.get_step(
+            self.step_index).get_time_parameters()
+        if time_parameters:
+            print('Here are the timings to watch out for:')
+            for action, parameters in time_parameters.items():
+                parameters_str = ' or '.join(parameters)
+                print(f'- {action.capitalize()} for {parameters_str}')
+        else:
+            print('There are no timings for this step.')
 
     def get_unit_conversion_choice(self):
         """
