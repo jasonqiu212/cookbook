@@ -105,6 +105,8 @@ class Bot:
                 self.show_current_step_ingredients()
             elif question == 'how long':
                 self.show_current_step_time_parameters()
+            elif question == 'what temperature':
+                self.show_current_step_temperature_parameters()
             elif question == 'convert units':
                 target_unit = self.get_unit_conversion_choice()
                 self.recipe.convert_units(target_unit)
@@ -246,6 +248,21 @@ class Bot:
                 print(f'- {action.capitalize()} for {parameters_str}')
         else:
             print('There are no timings for this step.')
+
+    def show_current_step_temperature_parameters(self):
+        """
+        Displays the temperature parameters for the current step.
+        """
+        temperature_parameters = self.recipe.get_step(
+            self.step_index).get_temperature_parameters()
+        if len(temperature_parameters) == 0:
+            print('There are no temperature parameters for this step.')
+        elif len(temperature_parameters) == 1:
+            print(temperature_parameters[0])
+        else:
+            print('Here are the temperature settings for this step:')
+            for parameter in temperature_parameters:
+                print(f'- {parameter}')
 
     def get_unit_conversion_choice(self):
         """
