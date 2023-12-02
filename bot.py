@@ -16,7 +16,7 @@ class Bot:
         self.history = []
         self.recipe = None
         self.step_index = None
-        self.last_mentioned_action = None # probs dont need this 
+        self.last_mentioned_action = None
 
         self.nlp = spacy.load("en_core_web_sm")
         self.last_bot_message = ""
@@ -108,7 +108,9 @@ class Bot:
                 self.show_step_for_tool(tool)
             elif re.search('how do i do that', question):
                 self.show_vague_how_to()
-            elif re.search('what is a', question) or re.search('how do i', question):
+            elif re.search('how do i', question) or re.search('how to', question):
+                self.show_youtube_search(question)
+            elif re.search('what is a', question):
                 self.show_google_search(question)
             elif question == 'what ingredients do i need':
                 self.show_current_step_ingredients()
@@ -163,7 +165,7 @@ class Bot:
         print('- \'What temperature?\': Ask about the temperature settings for this step')
         print()
 
-        print('Transform:')
+        print('Transform recipe:')
         print(
             '- \'Convert units\': Convert the units from imperial to metric, or vice versa')
 
@@ -261,22 +263,17 @@ class Bot:
         search_url = base_url + query_encoded
         print(f'Here is a Google search for your question: {search_url}')
 
-    def show_search_url(self, query):
+    def show_youtube_search(self, query):
         """
-        Generates a search URL based on the query type.
+        Displays a YouTube search URL for the given query.
+
         Args:
-            query: The user's query or question.
+            query: The user's query.
         """
-        if "how to" in query.lower() or "how do i" in query.lower():
-            base_url = "https://www.youtube.com/results?search_query="
-            query_encoded = urllib.parse.quote(query)
-            search_url = base_url + query_encoded
-            return print(f'No worries. I found a reference for you: {search_url}')
-        else:
-            base_url = "https://www.google.com/search?q="
-            query_encoded = urllib.parse.quote(query)
-            search_url = base_url + query_encoded
-            return print(f'Here is a Google search for your question: {search_url}')
+        base_url = "https://www.youtube.com/results?search_query="
+        query_encoded = urllib.parse.quote(query)
+        search_url = base_url + query_encoded
+        return print(f'No worries. I found a reference for you: {search_url}')
 
     def extract_action_from_last_message(self):
         """
@@ -293,7 +290,7 @@ class Bot:
                         phrase += " " + child.text
                 action_phrases.append(phrase)
         return action_phrases[0] if action_phrases else ""
-    
+
     def show_vague_how_to(self):
         """
         Displays an answer to a vague how to question using conversation history.
