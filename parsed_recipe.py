@@ -56,6 +56,8 @@ class ParsedRecipe:
             elif target_unit == 'IMPERIAL':
                 i.quantity, i.measurement = convert_metric_to_imperial(
                     i.quantity, i.measurement)
+        for i in self.steps:
+            i.convert_units(target_unit)
 
     def __repr__(self):
         s = ''
