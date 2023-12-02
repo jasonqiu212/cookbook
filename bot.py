@@ -82,10 +82,6 @@ class Bot:
             elif question == 'quit':
                 print('Hope your food tastes great! Goodbye.')
                 break
-            elif question == 'show all steps':
-                self.show_steps()
-            elif question == 'show all ingredients':
-                self.show_ingredients()
             elif question == 'repeat':
                 self.show_current_step()
             elif question == 'next':
@@ -96,6 +92,12 @@ class Bot:
                 i = re.search(
                     'step [\d]+', question).group().split()[-1]
                 self.show_step_i(i)
+            elif question == 'show all steps':
+                self.show_steps()
+            elif question == 'show all ingredients':
+                self.show_ingredients()
+            elif question == 'show all tools':
+                self.show_tools()
             elif re.search('how do i do that', question):
                 self.show_vague_how_to()
             elif re.search('what is a', question) or re.search('how do i', question):
@@ -112,7 +114,8 @@ class Bot:
                 target_unit = self.get_unit_conversion_choice()
                 self.recipe.convert_units(target_unit)
                 self.show_ingredients()
-            # TODO: Add other cases using regular expression
+            else:
+                print('Sorry, I did not understand that.')
 
     def show_help(self):
         """
@@ -125,13 +128,20 @@ class Bot:
         print('Basics:')
         print('- \'Help\': Display the supported queries and questions')
         print('- \'Quit\': Exit the chatbot')
-        print('- \'Show all steps\': Show all steps of the recipe')
-        print('- \'Show all ingredients\': Show the ingredients of the recipe')
-        print('- \'Show all tools\': Show the ingredients of the recipe')
+        print()
+
+        print('Navigation:')
         print('- \'Repeat\': Show the current step')
         print('- \'Next\': Show the next step')
         print('- \'Go back\': Show the previous step')
         print('- \'Step <STEP_NUMBER>\': Show a specific step')
+        print()
+
+        print('Questions about the recipe:')
+        print('- \'Show all steps\': Show all steps of the recipe')
+        print('- \'Show all ingredients\': Show the ingredients needed for the recipe')
+        print('- \'Show all tools\': Show the tools needed for the recipe')
+        print('- \'When do I need <TOOL>?\': Show the step number a tool is first used in')
         print()
 
         print('Questions about the current step:')
@@ -142,7 +152,6 @@ class Bot:
         print('- \'What tools do I need?\': Ask about the ingredients needed for this step')
         print('- \'How long?\': Ask about the timings for this step')
         print('- \'What temperature?\': Ask about the temperature settings for this step')
-
         print()
 
         print('Transform:')
@@ -209,6 +218,13 @@ class Bot:
         """
         print('Here are all of the ingredients used in this recipe:')
         self.show_list_in_numbered_list(self.recipe.get_ingredients())
+
+    def show_tools(self):
+        """
+        Displays all tools needed for this recipe.
+        """
+        print('Here are all of the tools used in this recipe:')
+        self.show_list_in_numbered_list(list(self.recipe.get_tools().keys()))
 
     def show_google_search(self, query):
         """
