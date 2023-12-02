@@ -193,7 +193,57 @@ def extract_heat_parameters(sentence):
     Returns:
         Dictionary with mapping from action verb to heat parameters.
     """
-    return {}
+    HEAT_LEVEL_KEYWORDS = ('low heat', 'medium heat',
+                           'medium-high heat', 'meadium high heat', 'high heat')
+    heat_parameters = []
+    sentence = sentence.lower()
+
+    for keyword in HEAT_LEVEL_KEYWORDS:
+        if keyword in sentence:
+            heat_parameters.append(keyword)
+
+    while re.search('\d+c/\d+c fan/gas \d+', sentence):
+        m = re.search('\d+c/\d+c fan/gas \d+', sentence).group()
+        m_list = m.split('/')
+        t, f, g = m_list[0].replace(
+            'c', '°C'), m_list[1].replace('c', '°C'), m_list[2]
+        heat_parameters.append(' or '.join((t, f, g)))
+        sentence = sentence.replace(m, '')
+    while re.search('\d+c\/fan \d+c\/gas \d+', sentence):
+        m = re.search('\d+c\/fan \d+c\/gas \d+', sentence).group()
+        m_list = m.split('/')
+        t, f, g = m_list[0].replace(
+            'c', '°C'), m_list[1][4:].replace('c', '°C') + ' fan', m_list[2]
+        heat_parameters.append(' or '.join((t, f, g)))
+        sentence = sentence.replace(m, '')
+    while re.search('\d+°c\/fan\d+°c\/gas \d+', sentence):
+        m = re.search('\d+°c\/fan\d+°c\/gas \d+', sentence).group()
+        m_list = m.replace('c', 'C').split('/')
+        t, f, g = m_list[0], m_list[1][3:] + ' fan', m_list[2]
+        heat_parameters.append(' or '.join((t, f, g)))
+        sentence = sentence.replace(m, '')
+    while re.search('\d+c\/\d+f\/gas \d+', sentence):
+        m = re.search('\d+c\/\d+f\/gas \d+', sentence).group()
+        m_list = m.split('/')
+        t, g = m_list[0].replace('c', '°C'), m_list[2]
+        heat_parameters.append(' or '.join((t, g)))
+        sentence = sentence.replace(m, '')
+    while re.search('\d+°c\/\d+°f\/gas mark \d+', sentence):
+        m = re.search('\d+°c\/\d+°f\/gas mark \d+', sentence).group()
+        m_list = m.split('/')
+        t, g = m_list[0].replace('c', 'C'), m_list[2].replace('mark ', '')
+        heat_parameters.append(' or '.join((t, g)))
+        sentence = sentence.replace(m, '')
+    while re.search('\d+°c', sentence):
+        m = re.search('\d+°c', sentence).group()
+        heat_parameters.append(m.replace('c', 'C'))
+        sentence = sentence.replace(m, '')
+    while re.search('\d+°f', sentence):
+        m = re.search('\d+°f', sentence).group()
+        heat_parameters.append(m.replace('f', 'F'))
+        sentence = sentence.replace(m, '')
+
+    return heat_parameters
 
 
 def extract_steps(raw_instructions, ingredients):
