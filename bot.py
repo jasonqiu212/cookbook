@@ -100,8 +100,10 @@ class Bot:
                 self.show_vague_how_to()
             elif re.search('what is a', question) or re.search('how do i', question):
                 self.show_google_search(question)
-            elif question == 'what do i need':
+            elif question == 'what ingredients do i need':
                 self.show_current_step_ingredients()
+            elif question == 'what tools do i need':
+                self.show_current_step_tools()
             elif question == 'how long':
                 self.show_current_step_time_parameters()
             elif question == 'what temperature':
@@ -125,6 +127,7 @@ class Bot:
         print('- \'Quit\': Exit the chatbot')
         print('- \'Show all steps\': Show all steps of the recipe')
         print('- \'Show all ingredients\': Show the ingredients of the recipe')
+        print('- \'Show all tools\': Show the ingredients of the recipe')
         print('- \'Repeat\': Show the current step')
         print('- \'Next\': Show the next step')
         print('- \'Go back\': Show the previous step')
@@ -135,7 +138,8 @@ class Bot:
         print('- \'How do I do that?\': Ask a question on a previously mentioned task')
         print('- \'What is a <INGREDIENT/TOOL/UTENSIL>\': Ask a question on an ingredient/tool/utensil')
         print('- \'How do I <TECHNIQUE>\': Ask a question on a technique')
-        print('- \'What do I need?\': Ask about the ingredients needed for this step')
+        print('- \'What ingredients do I need?\': Ask about the ingredients needed for this step')
+        print('- \'What tools do I need?\': Ask about the ingredients needed for this step')
         print('- \'How long?\': Ask about the timings for this step')
         print('- \'What temperature?\': Ask about the temperature settings for this step')
 
@@ -235,6 +239,18 @@ class Bot:
             self.show_list_in_numbered_list(step_ingredients)
         else:
             print('No ingredients are needed for this step.')
+
+    def show_current_step_tools(self):
+        """
+        Displays a list of tools for the current step.
+        """
+        step_tools = self.recipe.get_step(
+            self.step_index).get_tools()
+        if step_tools:
+            print('Here are all of the tools used in this step:')
+            self.show_list_in_numbered_list(step_tools)
+        else:
+            print('No tools are needed for this step.')
 
     def show_current_step_time_parameters(self):
         """

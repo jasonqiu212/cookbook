@@ -18,6 +18,9 @@ class Step:
     def get_ingredients(self):
         return self.ingredients
 
+    def get_tools(self):
+        return self.tools
+
     def get_time_parameters(self):
         return self.parameters['time']
 
