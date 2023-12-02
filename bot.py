@@ -1,6 +1,5 @@
 import re
 import urllib.parse
-import spacy
 
 from download import download_recipe_by_name, download_recipe_by_url
 from extract import extract
