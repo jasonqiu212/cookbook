@@ -439,6 +439,5 @@ def extract(raw_recipe):
     ingredients = extract_ingredients(raw_recipe['ingredients'])
     steps = extract_steps(raw_recipe['instructions'], ingredients, name)
     tools = compile_tools(steps)
-    print(tools)
 
     return name, steps, ingredients, tools
