@@ -92,8 +92,8 @@ def convert_metric_to_imperial(quantity, measurement):
 
 
 def convert_fahrenheit_to_celsius(temperature):
-    return round((temperature - 32) * (5 / 9), 2)
+    return round((temperature - 32) * (5 / 9), 2), '°C'
 
 
 def convert_celsius_to_fahrenheit(temperature):
-    return round((temperature * (9 / 5)) + 32, 2)
+    return round((temperature * (9 / 5)) + 32, 2), '°F'
