@@ -89,3 +89,11 @@ def convert_metric_to_imperial(quantity, measurement):
         imperial_measurement = 'cup'
 
     return imperial_quantity, imperial_measurement
+
+
+def convert_fahrenheit_to_celsius(temperature):
+    return round((temperature - 32) * (5 / 9), 2)
+
+
+def convert_celsius_to_fahrenheit(temperature):
+    return round((temperature * (9 / 5)) + 32, 2)
