@@ -218,7 +218,7 @@ def extract_time_parameters(sentence):
 
         token = doc[i]
 
-        while token.has_head():
+        while token.has_head() and token.head != token:
             if token.tag_ == 'VB':
                 break
             token = token.head
@@ -323,6 +323,7 @@ def extract_steps(raw_instructions, ingredients, name):
 
     steps = []
     for raw_step in raw_steps:
+        print(raw_step)
         actions = get_verbs(raw_step)
         main_action = get_main_action(raw_step, actions)
         step_ingredients = extract_ingredients_from_step(raw_step, ingredients)
