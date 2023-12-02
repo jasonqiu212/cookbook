@@ -242,15 +242,26 @@ def extract_ingredients(raw_ingredients):
                 d = list(map(lambda s: s.strip(), d))
                 ingredient = Ingredient(name, q, m, d)
 
-            # Multiple tokens in format of '<QUANTITY> <MEASUREMENT> <DESCRIPTORS>'
             elif quantity_word_list[0].isnumeric():
                 q = int(quantity_word_list[0])
-                m = quantity_word_list[1]
-                d = ' '.join(quantity_word_list[2:]).split(' and ') if len(
-                    quantity_word_list) >= 3 else []
-                d = list(map(lambda s: s.strip(), d))
-                ingredient = Ingredient(
-                    name, q, m, d)
+
+                doc = nlp(quantity)
+
+                # Multiple tokens in format of '<QUANTITY> <DESCRIPTORS>'
+                if doc[1].pos_ == 'ADJ':
+                    d = ' '.join(quantity_word_list[1:]).split(' and ') if len(
+                        quantity_word_list) >= 2 else []
+                    d = list(map(lambda s: s.strip(), d))
+                    ingredient = Ingredient(
+                        name, q, Ingredient.COUNTABLE_MEASUREMENT, d)
+
+                # Multiple tokens in format of '<QUANTITY> <MEASUREMENT> <DESCRIPTORS>'
+                else:
+                    m = quantity_word_list[1]
+                    d = ' '.join(quantity_word_list[2:]).split(' and ') if len(
+                        quantity_word_list) >= 3 else []
+                    d = list(map(lambda s: s.strip(), d))
+                    ingredient = Ingredient(name, q, m, d)
 
             # Multiple tokens that are all descriptors
             else:
