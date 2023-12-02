@@ -1,7 +1,7 @@
 """This file provides operations to extract information."""
 
 from collections import defaultdict
-import itertools
+from unicodedata import numeric
 import re
 
 import ftfy
@@ -13,12 +13,20 @@ from step import Step
 nlp = spacy.load("en_core_web_md")
 
 
-def preprocess(str):
+def preprocess(t):
     """
-    Fixes mojibake and removes extra whitespace.
+    Fixes mojibake, removes extra whitespace, and replaces vulgar fractions.
     """
-    str = ftfy.fix_text(str)
-    return re.sub('\s+', ' ', str)
+    VULGAR_FRACTIONS = ['¼', '½', '¾', '⅐', '⅑', '⅒', '⅓', '⅔',
+                        '⅕', '⅖', '⅗', '⅘', '⅙', '⅚', '⅛', '⅜', '⅝', '⅞', '⅟', '↉']
+    t = ftfy.fix_text(t)
+    for frac in VULGAR_FRACTIONS:
+        while re.search(frac, t):
+            m = re.search(frac, t).group()
+            converted = str(round(numeric(m), 2))
+            t = t.replace(m, converted)
+
+    return re.sub('\s+', ' ', t)
 
 
 def is_imperative(sentence):
@@ -347,6 +355,9 @@ def extract_ingredients(raw_ingredients):
     Returns:
         List of ingredients.
     """
+    for name, quantity in raw_ingredients.items():
+        raw_ingredients[name] = preprocess(quantity)
+
     ingredients = []
     for name, quantity in raw_ingredients.items():
         quantity_word_list = quantity.split()
