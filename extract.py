@@ -1,5 +1,6 @@
 """This file provides operations to extract information."""
 
+from collections import defaultdict
 import re
 
 import ftfy
@@ -140,6 +141,61 @@ def extract_ingredients_from_step(sentence, ingredients):
     return list(step_ingredients)
 
 
+def extract_time_parameters(sentence):
+    """
+    Extracts time parameters from sentence.
+
+    Args:
+        sentence: Sentence to extract from.
+
+    Returns:
+        Dictionary with mapping from action verb to time parameters.
+    """
+    doc = nlp(sentence)
+
+    time_entities = []
+    for ent in doc.ents:
+        if ent.label_ == 'TIME':
+            time_entities.append(ent.text.lower())
+
+    i = 0
+    actions = []
+    for ent in time_entities:
+        word_to_find = ent.split()[-1]
+
+        while doc[i].text != word_to_find:
+            i += 1
+
+        token = doc[i]
+
+        while token.has_head():
+            if token.tag_ == 'VB':
+                break
+            token = token.head
+
+        actions.append(token.text.lower())
+        i += 1
+
+    time_parameters = defaultdict(list)
+    for ent, action in zip(time_entities, actions):
+        time_parameters[action].append(ent)
+
+    return time_parameters
+
+
+def extract_heat_parameters(sentence):
+    """
+    Extracts heat parameters from sentence.
+
+    Args:
+        sentence: Sentence to extract from.
+
+    Returns:
+        Dictionary with mapping from action verb to heat parameters.
+    """
+    return {}
+
+
 def extract_steps(raw_instructions, ingredients):
     """
     Extracts steps from recipe.
@@ -172,7 +228,11 @@ def extract_steps(raw_instructions, ingredients):
         # TODO
         tools = []
         utensils = []
-        parameters = []
+        parameters = {
+            'time': extract_time_parameters(raw_step),
+            'temperature': extract_heat_parameters(raw_step)
+        }
+        print(parameters)
         steps.append(Step(raw_step, actions, step_ingredients,
                      tools, utensils, parameters))
     return steps
