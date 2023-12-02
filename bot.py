@@ -1,5 +1,6 @@
 import re
 import urllib.parse
+import spacy
 
 from download import download_recipe_by_name, download_recipe_by_url
 from extract import extract
@@ -15,7 +16,10 @@ class Bot:
         self.history = []
         self.recipe = None
         self.step_index = None
-        self.last_mentioned_action = None
+        self.last_mentioned_action = None # probs dont need this 
+
+        self.nlp = spacy.load("en_core_web_sm")
+        self.last_bot_message = ""
 
     def start(self):
         """
@@ -257,11 +261,49 @@ class Bot:
         search_url = base_url + query_encoded
         print(f'Here is a Google search for your question: {search_url}')
 
+    def show_search_url(self, query):
+        """
+        Generates a search URL based on the query type.
+        Args:
+            query: The user's query or question.
+        """
+        if "how to" in query.lower() or "how do i" in query.lower():
+            base_url = "https://www.youtube.com/results?search_query="
+            query_encoded = urllib.parse.quote(query)
+            search_url = base_url + query_encoded
+            return print(f'No worries. I found a reference for you: {search_url}')
+        else:
+            base_url = "https://www.google.com/search?q="
+            query_encoded = urllib.parse.quote(query)
+            search_url = base_url + query_encoded
+            return print(f'Here is a Google search for your question: {search_url}')
+
+    def extract_action_from_last_message(self):
+        """
+        Extracts the main action from the last bot message using spaCy.
+        """
+        doc = self.nlp(self.last_bot_message)
+        action_phrases = []
+
+        for token in doc:
+            if token.pos_ == "VERB":
+                phrase = token.text
+                for child in token.children:
+                    if child.dep_ in ["dobj", "prep", "xcomp"]:
+                        phrase += " " + child.text
+                action_phrases.append(phrase)
+        return action_phrases[0] if action_phrases else ""
+    
     def show_vague_how_to(self):
         """
         Displays an answer to a vague how to question using conversation history.
         """
-        # TODO
+        action = self.extract_action_from_last_message()
+        if action:
+            specific_query = f"How to {action}"
+            return self.show_google_search(specific_query)
+        else:
+            return "I'm not sure what you're referring to. Could you please specify?"
 
     def show_current_step_ingredients(self):
         """
