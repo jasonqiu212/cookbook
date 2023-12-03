@@ -15,8 +15,22 @@ def download_recipe_by_name(query):
     """
     url = 'https://www.themealdb.com/api/json/v1/1/search.php?s={}'.format(
         query)
-    response = requests.get(url)
-    response_json = response.json()
+    try:
+        response = requests.get(url)
+    except requests.exceptions.MissingSchema:
+        return {}
+
+    if not response.ok:
+        return {}
+
+    try:
+        response_json = response.json()
+    except ValueError:
+        return {}
+
+    if not response_json['meals']:
+        return {}
+
     return process_recipe_from_api(response_json)
 
 
@@ -30,8 +44,19 @@ def download_recipe_by_url(url):
     Returns:
         Dictionary containing recipe name, instructions, and ingredients of searched recipe
     """
-    response = requests.get(url)
-    response_json = response.json()
+    try:
+        response = requests.get(url)
+    except requests.exceptions.MissingSchema:
+        return {}
+
+    if not response.ok:
+        return {}
+
+    try:
+        response_json = response.json()
+    except ValueError:
+        return {}
+
     return process_recipe_from_api(response_json)
 
 

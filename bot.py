@@ -29,20 +29,28 @@ class Bot:
         """
         print(
             'Welcome to your interactive cookbook! How would you like to fetch your recipe from TheMealDB?')
-        print('[1] URL to a specific recipe.')
-        print('[2] Search recipe by name.')
         while True:
+            print('[1] URL to a specific recipe.')
+            print('[2] Search recipe by name.')
             query_choice = input('> ')
             if query_choice == '1':
                 print('Got it! Please input the URL to a recipe on TheMealDB.')
                 url = input('> ')
                 raw_recipe = download_recipe_by_url(url)
+                if not raw_recipe:
+                    print(
+                        'Sorry, we ran into a problem when loading the URL. Please try again.')
+                    continue
                 self.load_recipe(raw_recipe)
                 break
             if query_choice == '2':
                 print('Got it! Please input the name to a recipe you wish to cook.')
                 name = input('> ')
                 raw_recipe = download_recipe_by_name(name)
+                if not raw_recipe:
+                    print(
+                        'Sorry, we were unable to find a recipe with your query. Please try again.')
+                    continue
                 self.load_recipe(raw_recipe)
                 break
             else:
