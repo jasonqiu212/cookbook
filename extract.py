@@ -244,65 +244,85 @@ def extract_time_parameters(sentence):
 
 def extract_temperature_parameters(sentence):
     """
-    Extracts temperature parameters from sentence.
+    Extracts temperature parameters from sentence and standardizes temperature format in sentence.
 
     Args:
         sentence: Sentence to extract from.
 
     Returns:
-        Dictionary with mapping from action verb to temperature parameters.
+        Dictionary with mapping from action verb to temperature parameters and processed sentence.
     """
     HEAT_LEVEL_KEYWORDS = ('low heat', 'medium heat',
                            'medium-high heat', 'meadium high heat', 'high heat')
     temperature_parameters = []
-    sentence = sentence.lower()
+    lower_sentence = sentence.lower()
 
     for keyword in HEAT_LEVEL_KEYWORDS:
-        if keyword in sentence:
+        if keyword in lower_sentence:
             temperature_parameters.append(keyword)
 
-    while re.search('\d+c/\d+c fan/gas \d+', sentence):
-        m = re.search('\d+c/\d+c fan/gas \d+', sentence).group()
+    while re.search('\d+c/\d+c fan/gas \d+', lower_sentence):
+        m = re.search('\d+c/\d+c fan/gas \d+', lower_sentence).group()
         m_list = m.split('/')
         t, f, g = m_list[0].replace(
             'c', '°C'), m_list[1].replace('c', '°C'), m_list[2]
-        temperature_parameters.append(' or '.join((t, f, g)))
-        sentence = sentence.replace(m, '')
-    while re.search('\d+c\/fan \d+c\/gas \d+', sentence):
-        m = re.search('\d+c\/fan \d+c\/gas \d+', sentence).group()
+        param = ' or '.join((t, f, g))
+        temperature_parameters.append(param)
+        lower_sentence = lower_sentence.replace(m, '')
+        start_index = sentence.lower().index(m)
+        end_index = start_index + len(m)
+        sentence = sentence[:start_index] + param + sentence[end_index:]
+    while re.search('\d+c\/fan \d+c\/gas \d+', lower_sentence):
+        m = re.search('\d+c\/fan \d+c\/gas \d+', lower_sentence).group()
         m_list = m.split('/')
         t, f, g = m_list[0].replace(
             'c', '°C'), m_list[1][4:].replace('c', '°C') + ' fan', m_list[2]
-        temperature_parameters.append(' or '.join((t, f, g)))
-        sentence = sentence.replace(m, '')
-    while re.search('\d+°c\/fan\d+°c\/gas \d+', sentence):
-        m = re.search('\d+°c\/fan\d+°c\/gas \d+', sentence).group()
+        param = ' or '.join((t, f, g))
+        temperature_parameters.append(param)
+        lower_sentence = lower_sentence.replace(m, '')
+        start_index = sentence.lower().index(m)
+        end_index = start_index + len(m)
+        sentence = sentence[:start_index] + param + sentence[end_index:]
+    while re.search('\d+°c\/fan\d+°c\/gas \d+', lower_sentence):
+        m = re.search('\d+°c\/fan\d+°c\/gas \d+', lower_sentence).group()
         m_list = m.replace('c', 'C').split('/')
         t, f, g = m_list[0], m_list[1][3:] + ' fan', m_list[2]
-        temperature_parameters.append(' or '.join((t, f, g)))
-        sentence = sentence.replace(m, '')
-    while re.search('\d+c\/\d+f\/gas \d+', sentence):
-        m = re.search('\d+c\/\d+f\/gas \d+', sentence).group()
+        param = ' or '.join((t, f, g))
+        temperature_parameters.append(param)
+        lower_sentence = lower_sentence.replace(m, '')
+        start_index = sentence.lower().index(m)
+        end_index = start_index + len(m)
+        sentence = sentence[:start_index] + param + sentence[end_index:]
+    while re.search('\d+c\/\d+f\/gas \d+', lower_sentence):
+        m = re.search('\d+c\/\d+f\/gas \d+', lower_sentence).group()
         m_list = m.split('/')
         t, g = m_list[0].replace('c', '°C'), m_list[2]
-        temperature_parameters.append(' or '.join((t, g)))
-        sentence = sentence.replace(m, '')
-    while re.search('\d+°c\/\d+°f\/gas mark \d+', sentence):
-        m = re.search('\d+°c\/\d+°f\/gas mark \d+', sentence).group()
+        param = ' or '.join((t, g))
+        temperature_parameters.append(param)
+        lower_sentence = lower_sentence.replace(m, '')
+        start_index = sentence.lower().index(m)
+        end_index = start_index + len(m)
+        sentence = sentence[:start_index] + param + sentence[end_index:]
+    while re.search('\d+°c\/\d+°f\/gas mark \d+', lower_sentence):
+        m = re.search('\d+°c\/\d+°f\/gas mark \d+', lower_sentence).group()
         m_list = m.split('/')
         t, g = m_list[0].replace('c', 'C'), m_list[2].replace('mark ', '')
-        temperature_parameters.append(' or '.join((t, g)))
-        sentence = sentence.replace(m, '')
-    while re.search('\d+°c', sentence):
-        m = re.search('\d+°c', sentence).group()
+        param = ' or '.join((t, g))
+        temperature_parameters.append(param)
+        lower_sentence = lower_sentence.replace(m, '')
+        start_index, end_index = sentence.lower().index(
+            m), start_index + len(m)
+        sentence = sentence[:start_index] + param + sentence[end_index:]
+    while re.search('\d+°c', lower_sentence):
+        m = re.search('\d+°c', lower_sentence).group()
         temperature_parameters.append(m.replace('c', 'C'))
-        sentence = sentence.replace(m, '')
-    while re.search('\d+°f', sentence):
-        m = re.search('\d+°f', sentence).group()
+        lower_sentence = lower_sentence.replace(m, '')
+    while re.search('\d+°f', lower_sentence):
+        m = re.search('\d+°f', lower_sentence).group()
         temperature_parameters.append(m.replace('f', 'F'))
-        sentence = sentence.replace(m, '')
+        lower_sentence = lower_sentence.replace(m, '')
 
-    return temperature_parameters
+    return temperature_parameters, sentence
 
 
 def extract_steps(raw_instructions, ingredients, name):
@@ -336,11 +356,13 @@ def extract_steps(raw_instructions, ingredients, name):
         main_action = get_main_action(raw_step, actions)
         step_ingredients = extract_ingredients_from_step(raw_step, ingredients)
         tools = extract_tools(raw_step, ingredients, name)
+        temperature_parameters, processed_step = extract_temperature_parameters(
+            raw_step)
         parameters = {
             'time': extract_time_parameters(raw_step),
-            'temperature': extract_temperature_parameters(raw_step)
+            'temperature': temperature_parameters
         }
-        steps.append(Step(raw_step, actions, main_action, step_ingredients,
+        steps.append(Step(processed_step, actions, main_action, step_ingredients,
                      tools, parameters))
     return steps
 
