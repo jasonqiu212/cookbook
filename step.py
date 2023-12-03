@@ -60,5 +60,8 @@ class Step:
 
         self.parameters['temperature'] = converted_parameters
 
+        for original, converted in zip(temperature_parameters, converted_parameters):
+            self.text = self.text.replace(original, converted)
+
     def __repr__(self):
         return self.text
