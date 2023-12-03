@@ -17,7 +17,9 @@ $ git clone git@github.com:jasonqiu212/cookbook.git
 $ cd cookbook
 ```
 
-2. Install the required Python packages from `requirements.txt`. We recommend using a virtual environment to run this project.
+2. Install the required Python packages from `requirements.txt`.
+
+> We recommend using a [virtual environment](https://docs.python.org/3/library/venv.html) to run this project.
 
 ```
 $ python3 -m pip install -r requirements.txt
