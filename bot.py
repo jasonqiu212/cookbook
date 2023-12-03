@@ -86,21 +86,21 @@ class Bot:
             elif question == 'quit':
                 print('Hope your food tastes great! Goodbye.')
                 break
-            elif question == 'repeat':
+            elif 'repeat' in question:
                 self.show_current_step()
-            elif question == 'next':
+            elif 'next' in question:
                 self.show_next_step()
-            elif question == 'go back':
+            elif 'go back' in question:
                 self.show_previous_step()
             elif re.search('step [\d]+', question):
                 i = re.search(
                     'step [\d]+', question).group().split()[-1]
                 self.show_step_i(i)
-            elif question == 'show all steps':
+            elif 'show all steps' in question:
                 self.show_steps()
-            elif question == 'show all ingredients':
+            elif 'show all ingredients' in question:
                 self.show_ingredients()
-            elif question == 'show all tools':
+            elif 'show all tools' in question:
                 self.show_tools()
             elif re.search('when do i need the [\w|\s]+', question):
                 tool = re.search(
@@ -112,19 +112,19 @@ class Bot:
                 self.show_youtube_search(question)
             elif re.search('what is a', question):
                 self.show_google_search(question)
-            elif question == 'what ingredients do i need':
+            elif 'what ingredients do i need' in question:
                 self.show_current_step_ingredients()
-            elif question == 'what tools do i need':
+            elif 'what tools do i need' in question:
                 self.show_current_step_tools()
-            elif question == 'how long':
+            elif 'how long' in question:
                 self.show_current_step_time_parameters()
-            elif question == 'what temperature':
+            elif 'what temperature' in question:
                 self.show_current_step_temperature_parameters()
-            elif question == 'convert units':
+            elif 'convert units' in question:
                 target_unit = self.get_unit_conversion_choice()
                 self.recipe.convert_units(target_unit)
                 self.show_ingredients()
-            elif question == 'translate portion size':
+            elif 'translate portion size' in question:
                 ratio = self.get_portion_size()
                 self.recipe.translate_portion_size(ratio)
                 self.show_ingredients()
