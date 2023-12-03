@@ -46,7 +46,7 @@ class Step:
 
         temperature_parameters = self.get_temperature_parameters()
 
-        to_match = '\d+\.?\d+°C' if target_unit == 'IMPERIAL' else '\d+\.?\d+°F'
+        to_match = '\d*\.?\d+°C' if target_unit == 'IMPERIAL' else '\d*\.?\d+°F'
         f = convert_celsius_to_fahrenheit if target_unit == 'IMPERIAL' else convert_fahrenheit_to_celsius
 
         converted_parameters = []

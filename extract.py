@@ -369,11 +369,16 @@ def extract_ingredients(raw_ingredients):
         elif len(quantity_word_list) == 1:
             token = quantity_word_list[0]
 
-            # Single token in format of '<QUANTITY>'
+            # Single token in format of '<QUANTITY>' where <QUANTITY> is an integer
             # i.e. Ingredient is countable
             if token.isnumeric():
                 ingredient = Ingredient(
                     name, int(token), Ingredient.COUNTABLE_MEASUREMENT, [])
+
+            # Single token in format of '<QUANTITY>' where <QUANTITY> is a float
+            elif token.replace('.', '').isnumeric():
+                ingredient = Ingredient(
+                    name, float(token), Ingredient.COUNTABLE_MEASUREMENT, [])
 
             # Single token representing '<DESCRIPTOR>'
             elif token.isalpha():
@@ -382,9 +387,9 @@ def extract_ingredients(raw_ingredients):
 
             # Single token in format of '<QUANTITY><MEASUREMENT>'
             else:
-                numeric_match = re.search('\d+', token)
+                numeric_match = re.search('\d*\.?\d+', token)
                 split_index = numeric_match.end() if numeric_match else len(token) + 1
-                q = int(token[:split_index])
+                q = float(token[:split_index])
                 m = token[split_index:]
                 ingredient = Ingredient(name, q, m, [])
 
@@ -395,14 +400,15 @@ def extract_ingredients(raw_ingredients):
 
             quantity_word_list = quantity.split()
 
-            # Multiple tokens in format of '<FRACTION_QUANTITY> <MEASUREMENT> DESCRIPTORS>'
+            # Multiple tokens in format of '<FRACTION_QUANTITY> <MEASUREMENT> <DESCRIPTORS>'
+            # i.e. 1 1/2 oz
             if quantity_word_list[0].isnumeric() and re.search('\d\/\d', quantity_word_list[1]):
                 fraction_token = quantity_word_list[1]
                 numerator_match = re.search('\d', fraction_token)
                 split_index = numerator_match.end()
-                numerator, denominator = int(fraction_token[:split_index]), int(
+                numerator, denominator = float(fraction_token[:split_index]), float(
                     fraction_token[split_index + 1:])
-                q = int(quantity_word_list[0]) + \
+                q = float(quantity_word_list[0]) + \
                     round(numerator / denominator, 2)
 
                 m = quantity_word_list[2] if len(
@@ -412,13 +418,15 @@ def extract_ingredients(raw_ingredients):
                 d = list(map(lambda s: s.strip(), d))
                 ingredient = Ingredient(name, q, m, d)
 
-            elif quantity_word_list[0].isnumeric():
-                q = int(quantity_word_list[0])
+            elif quantity_word_list[0].replace('.', '').isnumeric():
+                q = (int(quantity_word_list[0])
+                     if quantity_word_list[0].isnumeric()
+                     else float(quantity_word_list[0]))
 
                 doc = nlp(quantity)
 
                 # Multiple tokens in format of '<QUANTITY> <DESCRIPTORS>'
-                if doc[1].pos_ == 'ADJ':
+                if doc[1].pos_ in ['ADJ', 'ADV', 'VERB']:
                     d = ' '.join(quantity_word_list[1:]).split(' and ') if len(
                         quantity_word_list) >= 2 else []
                     d = list(map(lambda s: s.strip(), d))
