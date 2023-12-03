@@ -116,6 +116,10 @@ class Bot:
                 target_unit = self.get_unit_conversion_choice()
                 self.recipe.convert_units(target_unit)
                 self.show_ingredients()
+            elif question == 'translate portion size':
+                ratio = self.get_portion_size()
+                self.recipe.translate_portion_size(ratio)
+                self.show_ingredients()
             else:
                 print('Sorry, I did not understand that.')
 
@@ -160,6 +164,8 @@ class Bot:
         print('Transform recipe:')
         print(
             '- \'Convert units\': Convert the units from imperial to metric, or vice versa')
+        print(
+            '- \'Translate portion size\': Increase/decrease the portion sizes by a ratio')
 
     def show_steps(self):
         """
@@ -352,6 +358,26 @@ class Bot:
             else:
                 print(
                     'Sorry, I did not understand that. Please enter either 1 or 2 to indicate your choice.')
+
+    def get_portion_size(self):
+        """
+        Gets portion size ratio from user.
+        """
+        print(
+            'Got it! Please input a ratio to translate the portion size by.')
+        while True:
+            ratio = input('> ')
+            if ratio.isnumeric():
+                print(
+                    f'Okay! Translating the ingredients by a ratio of {ratio} now!')
+                return int(ratio)
+            if ratio.replace('.', '').isnumeric():
+                print(
+                    f'Okay! Translating the ingredients by a ratio of {ratio} now!')
+                return float(ratio)
+            else:
+                print(
+                    'Sorry, I did not understand that. Please enter an integer or decimal number greater than 0.')
 
     def show_list_in_numbered_list(self, lst):
         """

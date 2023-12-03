@@ -1,3 +1,4 @@
+import itertools
 import re
 
 from units import convert_celsius_to_fahrenheit, convert_fahrenheit_to_celsius, convert_imperial_to_metric, convert_metric_to_imperial, IMPERIAL_TO_METRIC, METRIC_TO_IMPERIAL
@@ -36,7 +37,7 @@ class Step:
 
     def convert_units(self, target_unit):
         """
-        Converts the units in this recipe to the target unit.
+        Converts the units in this step to the target unit.
 
         Args:
             target_unit: Target unit. Valid units are 'METRIC' and 'IMPERIAL'.
@@ -67,14 +68,32 @@ class Step:
         f = convert_metric_to_imperial if target_unit == 'IMPERIAL' else convert_imperial_to_metric
 
         for unit in reversed(units.keys()):
-            if re.search(f'\d*\.?\d+ {unit}', self.text):
-                m = re.search(f'\d*\.?\d+ {unit}', self.text).group()
-                print(m)
-                q_str = m.replace(f' {unit}', '')
-                q = int(q_str) if q_str.isnumeric() else float(q_str)
-                converted_quantity, converted_measurement = f(q, unit)
-                self.text = self.text.replace(m, ' '.join(
-                    [str(converted_quantity), converted_measurement]))
+            expressions = [f' {unit}', unit]
+            for e in expressions:
+                matches = re.findall(f'\d*\.?\d+{e}', self.text)
+                for match in matches:
+                    q_str = match.replace(e, '')
+                    q = int(q_str) if q_str.isnumeric() else float(q_str)
+                    converted_quantity, converted_measurement = f(q, unit)
+                    self.text = self.text.replace(match, ' '.join(
+                        [str(converted_quantity), converted_measurement]))
+
+    def translate_portion_size(self, ratio):
+        """
+        Translates the ingredient portions in this step by a ratio.
+
+        Args:
+            ratio: Ratio to translate by.
+        """
+        for unit in itertools.chain(reversed(METRIC_TO_IMPERIAL.keys()), reversed(IMPERIAL_TO_METRIC.keys())):
+            expressions = [f' {unit}', unit]
+            for e in expressions:
+                matches = re.findall(f'\d*\.?\d+{e}', self.text)
+                for match in matches:
+                    q_str = match.replace(e, '')
+                    q = int(q_str) if q_str.isnumeric() else float(q_str)
+                    self.text = self.text.replace(match, ' '.join(
+                        [str(q * ratio), unit]))
 
     def __repr__(self):
         return self.text

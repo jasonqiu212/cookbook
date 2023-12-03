@@ -63,6 +63,24 @@ class ParsedRecipe:
         for i in self.steps:
             i.convert_units(target_unit)
 
+    def translate_portion_size(self, ratio):
+        """
+        Translates the ingredient quantities in this recipe by a ratio.
+
+        Args:
+            ratio: Ratio to translate by.
+        """
+        if not isinstance(ratio, float) and not isinstance(ratio, int):
+            return
+        if ratio == 1:
+            return
+        for i in self.ingredients:
+            if i.has_no_quantity():
+                continue
+            i.quantity = i.quantity * ratio
+        for i in self.steps:
+            i.translate_portion_size(ratio)
+
     def __repr__(self):
         s = ''
         for i, step in enumerate(self.steps):
