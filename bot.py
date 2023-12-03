@@ -351,9 +351,11 @@ class Bot:
             query_choice = input('> ')
             if query_choice == '1':
                 print('Okay! Converting to metric units now!')
+                print('...')
                 return 'METRIC'
             if query_choice == '2':
                 print('Okay! Converting to imperial units now!')
+                print('...')
                 return 'IMPERIAL'
             else:
                 print(
@@ -370,10 +372,14 @@ class Bot:
             if ratio.isnumeric():
                 print(
                     f'Okay! Translating the ingredients by a ratio of {ratio} now!')
+                print('Note that only ingredients are translated. Cookings times, temperatures, and etc. may need to be adjusted accordingly too.')
+                print('...')
                 return int(ratio)
             if ratio.replace('.', '').isnumeric():
                 print(
                     f'Okay! Translating the ingredients by a ratio of {ratio} now!')
+                print('Note that only ingredients are translated. Cookings times, temperatures, and etc. may need to be adjusted accordingly too.')
+                print('...')
                 return float(ratio)
             else:
                 print(
