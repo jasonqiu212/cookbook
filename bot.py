@@ -164,7 +164,7 @@ class Bot:
         print('- \'What is a <INGREDIENT/TOOL/UTENSIL>\': Ask a question on an ingredient/tool/utensil')
         print('- \'How do I <TECHNIQUE>\': Ask a question on a technique')
         print('- \'What ingredients do I need?\': Ask about the ingredients needed for this step')
-        print('- \'What tools do I need?\': Ask about the ingredients needed for this step')
+        print('- \'What tools do I need?\': Ask about the tools needed for this step')
         print('- \'How long?\': Ask about the timings for this step')
         print('- \'What temperature?\': Ask about the temperature settings for this step')
         print()
