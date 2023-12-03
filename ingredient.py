@@ -32,7 +32,7 @@ class Ingredient:
         return self.measurement == Ingredient.COUNTABLE_MEASUREMENT
 
     def has_no_quantity(self):
-        return self.measurement == Ingredient.NO_QUANTITY
+        return self.quantity == Ingredient.NO_QUANTITY
 
     def __repr__(self):
         descriptors_str = ', ' + ' and '.join(
