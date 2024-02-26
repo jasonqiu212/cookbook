@@ -8,6 +8,24 @@ Team members:
 
 ## Overview
 
+This project parses online recipes into a useful data representation and features a conversational interface for user interaction.
+
+The cookbook extracts recipes from [TheMealDB](https://www.themealdb.com/).
+
+The cookbook can answer queries and questions like:
+
+- Navigation: Repeat, Next, Go back
+- Show all ingredients
+- How do I do that?
+- What is a meatloaf?
+- How do I beat an egg?
+- What tools do I need?
+- How long?
+- What temperature?
+- Recipe Transformation: Convert units, Translate portion sizes
+
+Here is a [video demonstration](https://www.youtube.com/watch?v=VN1Iexfn7mU) of this project.
+
 ## Getting Started
 
 1. Clone this repository.
